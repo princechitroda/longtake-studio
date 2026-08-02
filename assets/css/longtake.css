@@ -14,8 +14,8 @@
 
   /* Ink on surface */
   --bone:       #EFECE4;
-  --grey:       #8F8F87;
-  --grey-dim:   #82827A;   /* lifted to clear 4.5:1 on ink for small labels */
+  --grey:       #A8A8A0;   /* lifted so body copy clears AA over the projector beam */
+  --grey-dim:   #9A9A94;   /* clears AA against the brightest point of the beam */
 
   /* The tally light — the red lamp that means the camera is rolling */
   --tally:      #E4341C;
@@ -57,6 +57,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* When the JS scroller is driving, CSS smooth-scroll would animate against
+     it and the two would fight over every scrollTo. */
   /* Anchor targets clear the fixed header instead of hiding under it */
   scroll-padding-top: calc(var(--header-h) + var(--s-3));
   -webkit-text-size-adjust: 100%;
@@ -100,6 +102,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .skip-link:focus { top: 12px; }
 
+html.has-smooth { scroll-behavior: auto; }
+
 /* --------------------------------------------------------------------------
    3. PRIMITIVES
    -------------------------------------------------------------------------- */
@@ -119,6 +123,82 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .accent { color: var(--tally); }
 
 .lede { color: var(--grey); line-height: 1.7; font-size: clamp(15px, 1.5vw, 17px); }
+
+/* --------------------------------------------------------------------------
+   THE LEADER — Academy countdown, shown only while JS is alive.
+   Hidden by default so a no-JS browser never meets a loading screen it
+   cannot dismiss.
+   -------------------------------------------------------------------------- */
+#leader { display: none; }
+
+.js #leader {
+  display: grid; place-items: center;
+  position: fixed; inset: 0; z-index: 400;
+  background: var(--ink-deep);
+  transition: opacity .7s var(--ease), visibility .7s;
+}
+.js #leader.is-out { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* Hold the page still underneath so nothing animates behind the leader */
+.is-loading body { overflow: hidden; }
+
+.leader__frame { position: relative; display: grid; place-items: center; width: min(46vmin, 300px); aspect-ratio: 1; }
+
+.leader__ring { position: absolute; inset: 0; }
+.leader__ring circle, .leader__ring line { fill: none; stroke: var(--line); stroke-width: 1; }
+.leader__ring .r-outer { stroke: rgba(239,236,228,.22); }
+
+/* The sweep hand — a clock, not a progress gauge */
+.leader__sweep {
+  position: absolute; left: 50%; top: 50%;
+  width: 1px; height: 50%;
+  background: linear-gradient(to top, var(--tally), rgba(228,52,28,0));
+  transform-origin: 50% 100%;
+  margin-left: -.5px; margin-top: -50%;
+}
+
+.leader__count {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(64px, 16vmin, 128px); letter-spacing: -.04em;
+  color: var(--bone); font-variant-numeric: tabular-nums; line-height: 1;
+}
+
+.leader__meta {
+  position: absolute; left: 0; right: 0; bottom: clamp(28px, 7vh, 64px);
+  display: grid; gap: 14px; justify-items: center; padding-inline: var(--gutter);
+}
+.leader__bar {
+  width: min(240px, 60vw); height: 1px; background: var(--line);
+  overflow: hidden;
+}
+.leader__bar span {
+  display: block; width: 100%; height: 100%;
+  background: var(--tally); transform: scaleX(0); transform-origin: left;
+}
+.leader__pct { font-variant-numeric: tabular-nums; }
+
+.leader__corner { position: absolute; width: 20px; height: 20px; border: 1px solid var(--line); }
+.leader__corner:nth-of-type(1) { top: 24px;    left: 24px;  border-right: 0; border-bottom: 0; }
+.leader__corner:nth-of-type(2) { top: 24px;    right: 24px; border-left: 0;  border-bottom: 0; }
+.leader__corner:nth-of-type(3) { bottom: 24px; left: 24px;  border-right: 0; border-top: 0; }
+.leader__corner:nth-of-type(4) { bottom: 24px; right: 24px; border-left: 0;  border-top: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js #leader { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   PROJECTOR — the WebGL beam sits under the whole page as its base layer.
+   Content is lifted above it; if WebGL never starts, the ink background
+   underneath is already the finished look.
+   -------------------------------------------------------------------------- */
+#projector {
+  position: fixed; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  display: block;
+}
+main, .site-footer { position: relative; z-index: 1; }
 
 /* Film grain + vignette — the emulsion the whole page sits on */
 .grain, .vignette { position: fixed; inset: 0; pointer-events: none; }
@@ -388,7 +468,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .scene:nth-child(even) .scene__frame { order: 2; }
 .scene:nth-child(even) .scene__text { order: 1; }
 
-.scene__tag { margin-bottom: var(--s-2); color: var(--tally-text); }
+.scene__tag {
+  margin-bottom: var(--s-2); color: var(--bone);
+  display: flex; align-items: center; gap: 10px;
+}
+.scene__tag::before {
+  content: ''; width: 22px; height: 1px; background: var(--tally); flex: none;
+}
 .scene__title { font-size: clamp(28px, 3.4vw, 42px); margin-bottom: var(--s-2); }
 .scene__body { color: var(--grey); line-height: 1.75; font-size: 15px; max-width: 46ch; margin-bottom: var(--s-3); }
 
@@ -561,7 +647,7 @@ a.frame-link:focus-visible .frame {
 
 .case-body { padding: var(--s-5) 0 var(--s-6); }
 .case-block { border-top: 1px solid var(--line); padding: var(--s-4) 0; display: grid; grid-template-columns: 200px 1fr; gap: var(--s-4); }
-.case-block > h2 { font-family: var(--font-mono); font-weight: 500; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--tally-text); padding-top: 5px; }
+.case-block > h2 { font-family: var(--font-mono); font-weight: 500; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--bone); padding-top: 5px; }
 .case-block__text p { color: var(--grey); line-height: 1.8; font-size: 15.5px; margin-bottom: var(--s-2); max-width: 62ch; }
 .case-block__text p:last-child { margin-bottom: 0; }
 .case-block__text strong { color: var(--bone); font-weight: 600; }
@@ -570,7 +656,7 @@ a.frame-link:focus-visible .frame {
 .case-list li { display: grid; grid-template-columns: 26px 1fr; gap: 12px; color: var(--grey); line-height: 1.7; font-size: 15px; }
 .case-list li::before {
   content: attr(data-n); font-family: var(--font-mono); font-size: 11px;
-  color: var(--tally-text); padding-top: 4px;
+  color: var(--grey); padding-top: 4px;
 }
 .case-list strong { color: var(--bone); font-weight: 600; }
 
@@ -586,6 +672,22 @@ a.frame-link:focus-visible .frame {
 .next-take a { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; }
 .next-take h2 { font-size: clamp(30px, 5.2vw, 60px); transition: color var(--dur-mid) var(--ease); }
 .next-take a:hover h2, .next-take a:focus-visible h2 { color: var(--tally); }
+
+/* --------------------------------------------------------------------------
+   SPLIT TYPE — words ride up into frame behind a mask
+   -------------------------------------------------------------------------- */
+.w   { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: .04em; }
+.w-i {
+  display: inline-block;
+  transform: translateY(108%);
+  transition: transform .9s var(--ease);
+  transition-delay: inherit;
+}
+.type-in .w-i { transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .w-i { transform: none !important; }
+}
 
 /* --------------------------------------------------------------------------
    15. REVEAL — scroll-in choreography

@@ -40,12 +40,43 @@
   ]
 }
 </script>
+<script>
+/* Reveal the leader only when JS is alive, and guarantee it comes off even if
+   leader.js never arrives. A loading screen you cannot dismiss is a trap. */
+(function(){var d=document.documentElement;
+d.className=d.className.replace('no-js','js')+' is-loading';
+setTimeout(function(){var l=document.getElementById('leader');
+if(l&&!l.classList.contains('is-out')){l.classList.add('is-out');
+d.classList.remove('is-loading');d.classList.add('is-revealed');}},6000);}());
+</script>
 </head>
 
 <body data-runtime="260">
 
+<div id="leader" role="status" aria-label="Loading">
+  <span class="leader__corner"></span><span class="leader__corner"></span>
+  <span class="leader__corner"></span><span class="leader__corner"></span>
+
+  <div class="leader__frame">
+    <svg class="leader__ring" viewBox="0 0 100 100" aria-hidden="true">
+      <circle class="r-outer" cx="50" cy="50" r="48"/>
+      <circle cx="50" cy="50" r="33"/>
+      <line x1="50" y1="1" x2="50" y2="99"/>
+      <line x1="1" y1="50" x2="99" y2="50"/>
+    </svg>
+    <span class="leader__sweep" aria-hidden="true"></span>
+    <span class="leader__count">5</span>
+  </div>
+
+  <p class="leader__meta">
+    <span class="leader__bar" aria-hidden="true"><span></span></span>
+    <span class="mono"><span class="leader__pct">00</span> &mdash; Longtake Studio</span>
+  </p>
+</div>
+
 <a class="skip-link" href="#main">Skip to content</a>
 
+<canvas id="projector" aria-hidden="true"></canvas>
 <div class="grain" aria-hidden="true"></div>
 <div class="vignette" aria-hidden="true"></div>
 
@@ -350,6 +381,9 @@
   <span class="mono">Websites that move like film</span>
 </footer>
 
+<script src="assets/js/leader.js" defer></script>
+<script src="assets/js/projector.js" defer></script>
 <script src="assets/js/longtake.js" defer></script>
+<script src="assets/js/motion.js" defer></script>
 </body>
 </html>
