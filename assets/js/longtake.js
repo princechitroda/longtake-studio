@@ -101,19 +101,16 @@
         if (entry.isIntersecting) {
           if (!v.dataset.attached) {
             v.dataset.attached = '1';
-            var source = document.createElement('source');
-            source.src = v.dataset.src;
-            source.type = 'video/mp4';
-            v.appendChild(source);
-            v.addEventListener('loadeddata', function () {
-              markReady(v);
-              if (!reduceMotion.matches) v.play().catch(function () { /* autoplay blocked; poster stands */ });
-            });
+            v.addEventListener('loadeddata', function () { markReady(v); });
             v.addEventListener('error', function () { v.remove(); });
-            v.load();
-          } else if (!reduceMotion.matches && v.paused) {
-            v.play().catch(function () {});
+            // Assigning .src runs the resource selection algorithm. Appending a
+            // <source> child here would not: the element has already selected
+            // (and found nothing), so a late child is ignored without a reload.
+            v.src = v.dataset.src;
           }
+          // play() is what actually starts the download. Under reduced motion we
+          // deliberately skip it and let the poster image stand.
+          if (!reduceMotion.matches) v.play().catch(function () { /* autoplay blocked; poster stands */ });
         } else if (!v.paused) {
           v.pause(); // don't decode video that's off-screen
         }

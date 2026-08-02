@@ -389,7 +389,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    artifact rather than a broken image.
    -------------------------------------------------------------------------- */
 .frame {
-  position: relative; aspect-ratio: 16 / 10;   /* reserved space => no CLS */
+  position: relative; aspect-ratio: 16 / 9;    /* matches the source captures; reserved space => no CLS */
   border-radius: 5px; overflow: hidden;
   background: var(--ink-deep);
   border: 1px solid var(--line-soft);
