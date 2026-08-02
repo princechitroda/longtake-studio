@@ -83,34 +83,49 @@ d.classList.remove('is-loading');d.classList.add('is-revealed');}},6000);}());
 
 <main id="main">
 
-  <section class="wrap case-hero">
-    <a href="../index.html#work" class="text-link case-hero__back"><span aria-hidden="true">←</span> All takes</a>
+  <!-- ============================ THE STAGE ============================ -->
+  <section class="stage" data-stage>
+    <div class="stage__inner">
 
-    <p class="mono">Scene 01 — Client work</p>
-    <h1 class="h-display">A dealership that drives itself.</h1>
-    <p class="case-hero__sub lede">
-      F1 Motors sells pre-owned luxury cars in Vadodara. The stock changes constantly, the
+      <div class="stage__head">
+        <a href="../index.html#work" class="text-link stage__back"><span aria-hidden="true">←</span> All takes</a>
+        <span class="mono">Scene 01 — Client work</span>
+        <h1 class="h-display">F1 Motors</h1>
+      </div>
+
+      <div class="stage__plate">
+      <div class="stage__screen" data-depth="0.25">
+        <img src="../assets/posters/f1-motors.jpg" alt="The F1 Motors site." loading="eager" decoding="async" width="1280" height="720">
+        <video data-src="../videos/f1-motors.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+      </div>
+
+      <div class="stage__evidence">
+        <figure class="stage__card stage__card--a" data-depth="1.7"><img src="../assets/stills/f1-1.jpg" alt="A car detail from the collection sequence" loading="lazy" decoding="async" width="760" height="428"></figure>
+        <figure class="stage__card stage__card--b" data-depth="2.5"><img src="../assets/stills/f1-2.jpg" alt="The interior inspection sequence" loading="lazy" decoding="async" width="760" height="428"></figure>
+        <figure class="stage__card stage__card--c" data-depth="1.1"><img src="../assets/stills/f1-3.jpg" alt="A vehicle on the dark studio backdrop" loading="lazy" decoding="async" width="760" height="428"></figure>
+
+        <dl class="stage__spec" data-depth="2.1">
+          <dt>Scope</dt><dd>Six pages + admin panel</dd>
+          <dt>Status</dt><dd>Shipped</dd>
+          <dt>Palette</dt><dd><span class="stage__swatches" role="img" aria-label="Colours sampled from the live site"><i style="background:#61252B"></i><i style="background:#1D252C"></i><i style="background:#4E2422"></i></span></dd>
+        </dl>
+      </div>
+      </div>
+
+      <p class="stage__logo"><span>F1 MOTORS</span></p>
+    </div>
+  </section>
+
+  <section class="wrap case-intro">
+    <p class="lede" data-reveal>F1 Motors sells pre-owned luxury cars in Vadodara. The stock changes constantly, the
       buying decision is emotional, and the finance question comes up before anyone picks up
-      the phone. The site had to handle all three.
-    </p>
-
+      the phone. The site had to handle all three.</p>
     <dl class="case-facts" data-reveal-group>
       <div data-reveal><dt>Client</dt><dd>F1 Motors, Vadodara</dd></div>
       <div data-reveal><dt>Scope</dt><dd>Six-page site, admin panel</dd></div>
       <div data-reveal><dt>Role</dt><dd>Design, build, deployment</dd></div>
       <div data-reveal><dt>Status</dt><dd>Shipped</dd></div>
     </dl>
-  </section>
-
-  <section class="wrap">
-    <figure class="case-figure" data-scene="The film">
-      <div class="frame" data-reveal="frame">
-        <div class="frame__slate"><span class="id">F1 Motors</span></div>
-        <img class="frame__media" src="../assets/posters/f1-motors.jpg" alt="The F1 Motors homepage: the headline “Twenty years, built piece by piece” over a showroom of lit cars." loading="lazy" decoding="async" width="1280" height="720">
-        <video class="frame__media" data-src="../videos/f1-motors.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
-      </div>
-      <figcaption>Homepage through collection, finance and enquiry — scroll drives the playhead, not a play button.</figcaption>
-    </figure>
   </section>
 
   <section class="wrap case-body">
@@ -196,5 +211,6 @@ d.classList.remove('is-loading');d.classList.add('is-revealed');}},6000);}());
 <script src="../assets/js/projector.js" defer></script>
 <script src="../assets/js/longtake.js" defer></script>
 <script src="../assets/js/motion.js" defer></script>
+<script src="../assets/js/stage.js" defer></script>
 </body>
 </html>

@@ -903,3 +903,104 @@ html:not(.has-reel) .slide__frame::after { background: rgba(10,9,8,.12); }
   .slide__meta { opacity: 1; transform: none; }
   .slide__frame::after { background: rgba(10,9,8,.12); }
 }
+
+/* ==========================================================================
+   THE STAGE — a project's opening. The build runs large in the middle and
+   the evidence floats around it at different depths, drifting apart as you
+   scroll. It is a contact sheet pinned around a monitor, not a hero banner.
+   ========================================================================== */
+.stage {
+  position: relative;
+  display: grid; place-items: center;
+  padding: calc(var(--header-h) + var(--s-4)) var(--gutter) var(--s-7);
+  overflow: hidden;          /* cards drift; never let them widen the page */
+}
+
+.stage__inner { position: relative; width: min(100%, 1180px); }
+
+/* The running build */
+.stage__plate { position: relative; width: min(100%, 820px); margin-inline: auto; }
+
+.stage__screen {
+  position: relative; z-index: 2; width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 6px; overflow: hidden;
+  background: var(--ink-deep);
+  border: 1px solid var(--line);
+  box-shadow: 0 60px 120px -46px rgba(0,0,0,.95);
+}
+.stage__screen img, .stage__screen video {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+}
+.stage__screen video { opacity: 0; transition: opacity .6s var(--ease); }
+.stage__screen video.is-ready { opacity: 1; }
+
+/* Floating evidence. Absolute on wide screens, an honest grid on narrow ones. */
+.stage__card {
+  position: absolute; z-index: 1;
+  border-radius: 4px; overflow: hidden;
+  border: 1px solid var(--line-soft);
+  background: var(--ink-raise);
+  box-shadow: 0 30px 60px -28px rgba(0,0,0,.9);
+  will-change: transform;
+}
+.stage__card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.stage__card--a { width: 26%; aspect-ratio: 4/3;   left: -19%; top: -9%; }
+.stage__card--b { width: 22%; aspect-ratio: 1;     right: -17%; top: 22%; }
+.stage__card--c { width: 29%; aspect-ratio: 16/10; left: -14%; bottom: -17%; }
+
+/* The spec card — type and palette, the way a brand sheet shows them */
+.stage__spec {
+  position: absolute; z-index: 3; right: -13%; bottom: -13%;
+  width: 30%; min-width: 190px;
+  padding: 16px 18px 18px;
+  border-radius: 4px; border: 1px solid var(--line);
+  background: rgba(15,14,13,.92);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 30px 60px -28px rgba(0,0,0,.9);
+  will-change: transform;
+}
+.stage__spec dt { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--grey-dim); }
+.stage__spec dd { font-size: 13px; color: var(--bone); margin-bottom: 10px; line-height: 1.35; }
+.stage__spec dd:last-child { margin-bottom: 0; }
+.stage__swatches { display: flex; gap: 6px; margin-top: 2px; }
+.stage__swatches i { width: 18px; height: 18px; border-radius: 2px; border: 1px solid rgba(255,255,255,.12); }
+
+/* Title over the stage */
+.stage__head { position: relative; z-index: 4; text-align: center; margin-bottom: var(--s-4); }
+.stage__head h1 { font-size: clamp(34px, 5.6vw, 70px); }
+.stage__head .mono { display: block; margin-bottom: 14px; }
+
+.stage__logo {
+  position: relative; z-index: 4;
+  margin: var(--s-5) auto 0; text-align: center;
+}
+.stage__logo span {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(20px, 2.6vw, 30px); letter-spacing: .04em;
+  color: var(--grey);
+}
+
+@media (max-width: 900px) {
+  .stage { min-height: 0; padding-bottom: var(--s-5); overflow: visible; }
+  .stage__card, .stage__spec {
+    position: static; width: auto; margin: 0;
+    transform: none !important;
+  }
+  .stage__evidence {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 12px; margin-top: var(--s-3);
+  }
+  .stage__card--a, .stage__card--b, .stage__card--c { aspect-ratio: 4/3; }
+  .stage__spec { grid-column: 1 / -1; }
+}
+@media (min-width: 901px) { .stage__evidence { display: contents; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .stage__card, .stage__spec { transform: none !important; }
+}
+
+.case-intro { padding: var(--s-5) 0 var(--s-2); }
+.case-intro .lede { max-width: 62ch; }
+.stage__back { display: inline-flex; align-items: center; gap: 9px; margin-bottom: var(--s-3); }
