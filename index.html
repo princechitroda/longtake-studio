@@ -81,29 +81,36 @@
 <main id="main">
 
   <!-- ============================ HERO ============================ -->
-  <section class="hero wrap">
-    <p class="hero__eyebrow">
-      <span class="bar" aria-hidden="true"></span>
-      <span class="mono">Web &amp; motion studio — India to worldwide</span>
-    </p>
+  <section class="hero">
+    <div class="hero__bg" aria-hidden="true">
+      <img src="assets/posters/hero.jpg" alt="" width="1024" height="576" decoding="async">
+      <video data-src="videos/hero-loop.mp4" data-defer muted loop playsinline preload="none"></video>
+    </div>
 
-    <h1 class="hero__title h-display">
-      <span class="line"><span>Websites that</span></span>
-      <span class="line"><span>move like <em class="accent" style="font-style:normal">film</em>.</span></span>
-    </h1>
+    <div class="hero__inner">
+      <p class="hero__eyebrow">
+        <span class="bar" aria-hidden="true"></span>
+        <span class="mono">Web &amp; motion studio — India to worldwide</span>
+      </p>
 
-    <p class="hero__sub lede">
-      Cinematic, scroll-driven builds for brands that refuse to look like everyone else.
-      One continuous take — not a page of disconnected blocks.
-    </p>
+      <h1 class="hero__title h-display">
+        <span class="line"><span>Websites that</span></span>
+        <span class="line"><span>move like <em class="accent" style="font-style:normal">film</em>.</span></span>
+      </h1>
 
-    <div class="hero__cta">
-      <a href="#work" class="btn btn--primary">See the work <span class="btn__arrow" aria-hidden="true">→</span></a>
-      <a href="#contact" class="btn btn--ghost">Start a project</a>
+      <p class="hero__sub lede">
+        Cinematic, scroll-driven builds for brands that refuse to look like everyone else.
+        One continuous take — not a page of disconnected blocks.
+      </p>
+
+      <div class="hero__cta">
+        <a href="#work" class="btn btn--primary">See the work <span class="btn__arrow" aria-hidden="true">→</span></a>
+        <a href="#contact" class="btn btn--ghost">Start a project</a>
+      </div>
     </div>
 
     <div class="hero__meta">
-      <span class="mono">Three shipped builds</span>
+      <span class="mono">Four builds, three live</span>
       <span class="mono">Mahuva, Gujarat</span>
     </div>
 
@@ -117,10 +124,10 @@
   <section id="work" class="wrap">
     <div class="section-head" data-reveal>
       <div>
-        <span class="mono">Selected work / 03</span>
+        <span class="mono">Selected work / 04</span>
         <h2 class="h-display">The takes.</h2>
       </div>
-      <p>Every project below shipped as a full build, not a mockup. Sound off, scroll on.</p>
+      <p>Every project below is a full build, not a mockup. Three are live; one is in review. Sound off, scroll on.</p>
     </div>
   </section>
 
@@ -185,6 +192,35 @@
     </article>
 
     <!-- 03 -->
+    <article class="scene" data-scene="Katariya">
+      <div class="wrap scene__inner">
+        <a class="scene__frame frame-link" href="work/katariya.html" tabindex="-1" aria-hidden="true">
+          <div class="frame" data-reveal="frame">
+            <div class="frame__slate"><span class="id">Katariya</span></div>
+            <img class="frame__media" src="assets/posters/katariya.jpg" alt="" loading="lazy" decoding="async" width="1280" height="720">
+            <video class="frame__media" data-src="videos/katariya.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+          </div>
+        </a>
+
+        <div class="scene__text" data-reveal>
+          <p class="mono scene__tag">03 — Client work</p>
+          <h3 class="scene__title h-display">Katariya</h3>
+          <p class="scene__body">
+            A family menswear showroom in Mahuva with nothing sold online. The page opens
+            with “scroll to step inside” and means it — the whole site is a walk down the
+            racks, ending at directions and a phone number rather than a cart.
+          </p>
+          <div class="chips">
+            <span class="chip">Walk-through scroll</span>
+            <span class="chip">Local retail</span>
+            <span class="chip">In build</span>
+          </div>
+          <a href="work/katariya.html" class="text-link">Read the case study <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </article>
+
+    <!-- 04 -->
     <article class="scene" data-scene="NEXUS">
       <div class="wrap scene__inner">
         <a class="scene__frame frame-link" href="work/nexus.html" tabindex="-1" aria-hidden="true">
@@ -196,7 +232,7 @@
         </a>
 
         <div class="scene__text" data-reveal>
-          <p class="mono scene__tag">03 — Own product</p>
+          <p class="mono scene__tag">04 — Own product</p>
           <h3 class="scene__title h-display">NEXUS</h3>
           <p class="scene__body">
             An AI-assisted trading platform, built and run in-house: authentication, live

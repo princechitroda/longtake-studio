@@ -260,9 +260,33 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hero {
   min-height: 100svh;
   display: flex; flex-direction: column; justify-content: center;
-  position: relative;
+  position: relative; isolation: isolate;
   padding-top: calc(var(--header-h) + var(--s-4));
   padding-bottom: var(--s-6);
+}
+/* Full-bleed background; the copy stays inside the measure via .hero__inner */
+.hero__inner {
+  position: relative; z-index: 1;
+  width: 100%; max-width: var(--measure);
+  margin-inline: auto; padding-inline: var(--gutter);
+}
+
+.hero__bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.hero__bg img, .hero__bg video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.hero__bg video { opacity: 0; transition: opacity 1.4s var(--ease); }
+.hero__bg video.is-ready { opacity: 1; }
+
+/* The scrim is what makes the headline legible over moving footage. At these
+   alpha values even a pure-white frame leaves the bone text above 5.9:1, so
+   contrast never depends on what the video happens to be showing. */
+.hero__bg::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(18,17,16,.80) 0%, rgba(18,17,16,.74) 42%, rgba(18,17,16,.94) 100%),
+    linear-gradient(90deg, rgba(18,17,16,.55) 0%, rgba(18,17,16,.10) 62%);
 }
 .hero__eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: var(--s-3); }
 .hero__eyebrow .bar {

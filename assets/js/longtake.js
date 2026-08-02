@@ -93,12 +93,27 @@
     img.addEventListener('error', function () { img.remove(); }); // fall back to slate
   });
 
-  var videoFrames = document.querySelectorAll('video.frame__media[data-src]');
+  // The hero video is in view immediately, so [data-defer] holds it back until
+  // the page has finished loading — it must never compete with first paint.
+  var pageLoaded = document.readyState === 'complete';
+  if (!pageLoaded) {
+    window.addEventListener('load', function () { pageLoaded = true; }, { once: true });
+  }
+
+  var videoFrames = document.querySelectorAll('video[data-src]');
   if (videoFrames.length && 'IntersectionObserver' in window) {
     var videoObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         var v = entry.target;
         if (entry.isIntersecting) {
+          if (v.hasAttribute('data-defer') && !pageLoaded) {
+            window.addEventListener('load', function () {
+              // re-enter through the same path now that loading is done
+              videoObserver.unobserve(v);
+              videoObserver.observe(v);
+            }, { once: true });
+            return;
+          }
           if (!v.dataset.attached) {
             v.dataset.attached = '1';
             v.addEventListener('loadeddata', function () { markReady(v); });
