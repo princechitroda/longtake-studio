@@ -765,3 +765,141 @@ a.frame-link:focus-visible .frame {
   body { background: #fff; color: #000; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
 }
+
+/* ==========================================================================
+   THE REEL — five projects on one horizontal track, driven by vertical scroll.
+
+   A long take is a tracking shot, so panning sideways across the work is the
+   same idea as craning down it: the camera never cuts. Scroll stays a normal
+   vertical scroll — the page is genuinely tall and the scrollbar is honest —
+   and that scroll position is mapped onto the track's X.
+   ========================================================================== */
+.reel { position: relative; }
+
+.reel__sticky {
+  position: sticky; top: 0;
+  height: 100svh;
+  display: flex; align-items: center;
+  overflow: hidden;
+  /* No shared `perspective` + `preserve-3d` here. That combination is visually
+     nicer in principle but breaks hit-testing in Chromium: 3D-transformed
+     slides stop receiving pointer events entirely, so hover dies and — worse —
+     the links become unclickable. Each slide carries its own perspective()
+     inside its transform instead; at these angles it looks the same. */
+}
+
+.reel__track {
+  display: flex; align-items: center;
+  gap: clamp(28px, 4.4vw, 76px);
+  padding-inline: max(var(--gutter), calc(50vw - 30vw));
+  will-change: transform;
+}
+
+.slide {
+  flex: 0 0 auto;
+  width: clamp(300px, 58vw, 860px);
+}
+
+.slide__link { display: block; position: relative; }
+
+.slide__frame {
+  position: relative; aspect-ratio: 16 / 9;
+  border-radius: 6px; overflow: hidden;
+  background: var(--ink-deep);
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 50px 90px -40px rgba(0,0,0,.9);
+  /* A real reflection of whatever is rendering, video included, for free on
+     the compositor. Firefox ignores it and simply shows no reflection. */
+  -webkit-box-reflect: below 8px linear-gradient(transparent 74%, rgba(0,0,0,.26));
+  transition: border-color var(--dur-mid) var(--ease);
+}
+
+.slide__frame img, .slide__frame video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.slide__frame video { opacity: 0; transition: opacity .55s var(--ease); }
+.slide__frame video.is-ready { opacity: 1; }
+
+/* Dim everything that is not the slide you are pointing at. The foot gradient
+   is permanent — it is what keeps the caption readable over a bright frame. */
+.slide__frame::before {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(10,9,8,0) 42%, rgba(10,9,8,.62) 74%, rgba(10,9,8,.94) 100%);
+}
+.slide__frame::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: rgba(10,9,8,.46);
+  transition: background var(--dur-mid) var(--ease);
+}
+.slide.is-near .slide__frame::after { background: rgba(10,9,8,.12); }
+.slide.is-hot  .slide__frame::after { background: rgba(10,9,8,0); }
+.slide.is-hot  .slide__frame { border-color: var(--line); }
+
+.slide__cap {
+  position: absolute; z-index: 2;
+  left: clamp(16px, 2.2vw, 30px); right: clamp(16px, 2.2vw, 30px);
+  bottom: clamp(14px, 2vw, 26px);
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  pointer-events: none;
+}
+.slide__num {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em;
+  color: var(--bone); text-shadow: 0 1px 12px rgba(10,9,8,.9);
+  transition: color var(--dur-mid) var(--ease);
+}
+.slide.is-hot .slide__num { color: var(--tally); }
+
+.slide__title {
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(21px, 2.5vw, 38px); letter-spacing: -.035em; line-height: 1;
+  text-shadow: 0 2px 22px rgba(10,9,8,.85);
+}
+/* Per-letter lift on hover — the caption animates with the slide, not after it */
+.slide__title .c {
+  display: inline-block;
+  transform: translateY(0);
+  transition: transform .5s var(--ease);
+  transition-delay: calc(var(--i) * 22ms);
+}
+.slide.is-hot .slide__title .c { transform: translateY(-.14em); }
+
+.slide__meta {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--bone); text-shadow: 0 1px 12px rgba(10,9,8,.9);
+  opacity: 0; transform: translateY(6px);
+  transition: opacity var(--dur-mid) var(--ease), transform var(--dur-mid) var(--ease);
+}
+.slide.is-hot .slide__meta { opacity: 1; transform: none; }
+
+/* Rail + progress, so the reel says where it is in the take */
+.reel__rail {
+  position: absolute; left: var(--gutter); right: var(--gutter); bottom: clamp(22px, 4vh, 48px);
+  height: 1px; background: var(--line-soft);
+}
+.reel__rail span {
+  display: block; height: 100%; width: 100%;
+  background: var(--tally);
+  transform: scaleX(0); transform-origin: left;
+}
+.reel__hint {
+  position: absolute; left: var(--gutter); bottom: calc(clamp(22px, 4vh, 48px) + 16px);
+}
+
+/* Touch and no-JS both fall back to an ordinary horizontal scroller, which
+   works with a swipe and needs no scroll mapping at all. */
+.no-js .reel__sticky,
+html:not(.has-reel) .reel__sticky {
+  position: static; height: auto; overflow-x: auto; overflow-y: hidden;
+  padding-block: var(--s-5);
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+}
+.no-js .reel, html:not(.has-reel) .reel { height: auto !important; }
+.no-js .slide, html:not(.has-reel) .slide { scroll-snap-align: center; }
+html:not(.has-reel) .slide__frame::after { background: rgba(10,9,8,.12); }
+
+@media (prefers-reduced-motion: reduce) {
+  .slide__title .c { transform: none !important; }
+  .slide__meta { opacity: 1; transform: none; }
+  .slide__frame::after { background: rgba(10,9,8,.12); }
+}
