@@ -33,7 +33,19 @@
     });
   }
 
-  if (document.fonts && document.fonts.ready) {
+  // With the leader up, the hero must not play out behind it — it would be
+  // over before anyone saw it. Wait for the reveal, or run straight away when
+  // there is no leader (reduced motion, or JS-built page without one).
+  // Check the class as well as listening for the event: if the leader finished
+  // synchronously (reduced motion) it dispatched before this file even ran, and
+  // waiting on an event that has already fired would strand the hero hidden.
+  var leaderPending = document.getElementById('leader') &&
+                      !document.documentElement.classList.contains('is-revealed');
+
+  if (leaderPending) {
+    document.addEventListener('leader:done', startLoadSequence, { once: true });
+    setTimeout(startLoadSequence, 3400);        // failsafe; adding the class twice is harmless
+  } else if (document.fonts && document.fonts.ready) {
     // Wait for webfonts so the title doesn't animate in, then reflow when
     // Archivo swaps in. Capped so a slow font CDN can never hold the page.
     var fontsSettled = false;
