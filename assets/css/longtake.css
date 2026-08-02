@@ -285,8 +285,17 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hero__bg::after {
   content: ''; position: absolute; inset: 0;
   background:
-    linear-gradient(180deg, rgba(18,17,16,.80) 0%, rgba(18,17,16,.74) 42%, rgba(18,17,16,.94) 100%),
-    linear-gradient(90deg, rgba(18,17,16,.55) 0%, rgba(18,17,16,.10) 62%);
+    /* vertical: keeps the header readable and sinks the footer edge */
+    linear-gradient(180deg, rgba(18,17,16,.72) 0%, rgba(18,17,16,.58) 44%, rgba(18,17,16,.90) 100%),
+    /* horizontal: heavy over the column the copy occupies, near-clear on the
+       right so the footage is actually visible rather than uniformly muddy */
+    linear-gradient(90deg, rgba(18,17,16,.66) 0%, rgba(18,17,16,.52) 34%, rgba(18,17,16,.04) 72%);
+}
+@media (max-width: 860px) {
+  /* copy spans the full width on phones, so the side gradient can't carry it */
+  .hero__bg::after {
+    background: linear-gradient(180deg, rgba(18,17,16,.80) 0%, rgba(18,17,16,.70) 44%, rgba(18,17,16,.92) 100%);
+  }
 }
 .hero__eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: var(--s-3); }
 .hero__eyebrow .bar {
