@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXUS — Longtake Studio</title>
+<meta name="description" content="An AI-assisted trading platform built and run in-house: authentication, live market data, and a paper-trading engine for learning strategy without risking real capital.">
+<link rel="canonical" href="https://longtakestudio.com/work/nexus.html">
+
+<meta property="og:type" content="article">
+<meta property="og:title" content="NEXUS — Longtake Studio">
+<meta property="og:description" content="An AI-assisted trading platform, built and run in-house.">
+<meta name="theme-color" content="#121110">
+
+<link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/css/longtake.css">
+</head>
+
+<body data-runtime="120">
+
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="scrubber" aria-hidden="true">
+  <div class="scrubber__fill"></div>
+  <div class="scrubber__marks"></div>
+</div>
+
+<header class="site-header">
+  <a href="../index.html" class="logo"><span class="logo__tally" aria-hidden="true"></span>LONGTAKE</a>
+  <nav class="site-nav" id="site-nav" aria-label="Primary">
+    <a href="../index.html#work" aria-current="page">Work</a>
+    <a href="../index.html#approach">Approach</a>
+    <a href="../index.html#services">Services</a>
+    <a href="../index.html#contact">Contact</a>
+  </nav>
+  <p class="timecode">
+    <span class="timecode__led" aria-hidden="true"></span>
+    <span class="sr-only">Scroll position as timecode:</span>
+    <span data-timecode>00:00:00:00</span>
+  </p>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+    <span class="nav-toggle__bar" aria-hidden="true"></span>
+    <span class="nav-toggle__bar" aria-hidden="true"></span>
+    <span class="nav-toggle__bar" aria-hidden="true"></span>
+  </button>
+</header>
+
+<main id="main">
+
+  <section class="wrap case-hero">
+    <a href="../index.html#work" class="text-link case-hero__back"><span aria-hidden="true">←</span> All takes</a>
+
+    <p class="mono">Scene 03 — Own product</p>
+    <h1 class="h-display">The one we had to run ourselves.</h1>
+    <p class="case-hero__sub lede">
+      NEXUS is an AI-assisted trading platform the studio designed, built, and operates.
+      It exists partly as a product and partly as an argument: a studio that ships software
+      it has to maintain is a different proposition from one that ships mockups.
+    </p>
+
+    <dl class="case-facts" data-reveal-group>
+      <div data-reveal><dt>Client</dt><dd>Longtake Studio (in-house)</dd></div>
+      <div data-reveal><dt>Scope</dt><dd>Full-stack product</dd></div>
+      <div data-reveal><dt>Role</dt><dd>Product, design, engineering, ops</dd></div>
+      <div data-reveal><dt>Status</dt><dd>Running</dd></div>
+    </dl>
+  </section>
+
+  <section class="wrap">
+    <figure class="case-figure" data-scene="The film">
+      <div class="frame" data-reveal="frame">
+        <div class="frame__slate">
+          <span class="id">NEXUS</span>
+          <span class="status">Still pending</span>
+        </div>
+        <img class="frame__media" src="../assets/posters/nexus.jpg" alt="The NEXUS trading interface, showing live market data." loading="lazy" decoding="async" width="1280" height="800">
+      </div>
+      <figcaption>Live market data, paper positions, no real capital at risk.</figcaption>
+    </figure>
+  </section>
+
+  <section class="wrap case-body">
+
+    <div class="case-block" data-scene="The brief">
+      <h2>The brief</h2>
+      <div class="case-block__text">
+        <p>
+          Learning to trade has a bad failure mode: the only way most people find out their
+          strategy does not work is by losing money proving it. Paper trading solves that,
+          but the tools for it are usually either toys or bolted onto a broker that would
+          rather you were trading for real.
+        </p>
+        <p>
+          NEXUS was built to sit in between — serious enough to teach something, safe enough
+          that being wrong costs nothing.
+        </p>
+      </div>
+    </div>
+
+    <div class="case-block" data-scene="The build">
+      <h2>The build</h2>
+      <div class="case-block__text">
+        <p>
+          This is a full application rather than a marketing site: accounts and
+          authentication, a live market data pipeline, and a paper-trading engine that has to
+          settle positions correctly every time or the entire premise fails.
+        </p>
+        <p>
+          Interface work at this density is a different discipline from a landing page.
+          Numbers have to stay legible while updating, state has to be obvious at a glance,
+          and nothing decorative is allowed to compete with the data.
+        </p>
+      </div>
+    </div>
+
+    <div class="case-block" data-scene="The detail">
+      <h2>The detail</h2>
+      <div class="case-block__text">
+        <ul class="case-list">
+          <li data-n="01"><strong>Live data, handled honestly.</strong> Market feeds fail, lag, and reconnect. The interface says which of those is happening instead of quietly showing a stale number as though it were current.</li>
+          <li data-n="02"><strong>A paper engine that actually settles.</strong> Positions, fills and running P&amp;L are computed properly. A learning tool that models the wrong thing teaches the wrong lesson.</li>
+          <li data-n="03"><strong>Auth and payments in production.</strong> The unglamorous half of shipping a product, and the half that proves a studio can be trusted with one.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="case-block" data-scene="Why it matters">
+      <h2>Why it matters</h2>
+      <div class="case-block__text">
+        <p>
+          Most studios show you the work they handed off. NEXUS is the work we did not hand
+          off — still running, still our responsibility when something breaks at an
+          inconvenient hour.
+        </p>
+        <p>
+          If you are weighing whether this studio can build the software behind your site and
+          not just the surface of it, this is the answer.
+        </p>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="wrap next-take">
+    <a href="../index.html#contact">
+      <div>
+        <p class="mono" style="margin-bottom:12px">End of reel</p>
+        <h2 class="h-display">Tell us what you're building.</h2>
+      </div>
+      <span class="text-link" aria-hidden="true">Start a project <span>→</span></span>
+    </a>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <span class="mono">© 2026 Longtake Studio</span>
+  <span class="mono"><a href="../index.html#work">Back to the work</a></span>
+</footer>
+
+<script src="../assets/js/longtake.js" defer></script>
+</body>
+</html>

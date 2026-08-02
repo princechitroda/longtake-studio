@@ -1,0 +1,632 @@
+/* ==========================================================================
+   LONGTAKE STUDIO — core stylesheet
+   One continuous take: the page is the shot, scroll is the camera move.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOKENS
+   -------------------------------------------------------------------------- */
+:root {
+  /* Surface — warm near-black, never pure #000 (OLED smear, and film has no true black) */
+  --ink:        #121110;
+  --ink-deep:   #0a0908;
+  --ink-raise:  #191816;
+
+  /* Ink on surface */
+  --bone:       #EFECE4;
+  --grey:       #8F8F87;
+  --grey-dim:   #82827A;   /* lifted to clear 4.5:1 on ink for small labels */
+
+  /* The tally light — the red lamp that means the camera is rolling */
+  --tally:      #E4341C;
+  --tally-warm: #FF5A3D;
+  /* The brand red only reaches 4.32:1 on ink, which is short of AA for small
+     text. Large display type is fine; small labels use this lifted variant. */
+  --tally-text: #EC4025;
+
+  /* Hairlines */
+  --line:       rgba(239, 236, 228, .13);
+  --line-soft:  rgba(239, 236, 228, .06);
+
+  /* Type */
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  /* Motion — expo.out. Everything decelerates like a camera settling on its mark. */
+  --ease:      cubic-bezier(.16, 1, .3, 1);
+  --ease-soft: cubic-bezier(.4, 0, .2, 1);
+  --dur-fast:  .22s;
+  --dur-mid:   .45s;
+  --dur-slow:  .85s;
+
+  /* Space — spacious scale */
+  --s-1: 8px;   --s-2: 16px;  --s-3: 24px;  --s-4: 40px;
+  --s-5: 64px;  --s-6: 96px;  --s-7: 144px;
+
+  --gutter: clamp(20px, 5vw, 64px);
+  --measure: 1240px;
+
+  --header-h: 68px;
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* Anchor targets clear the fixed header instead of hiding under it */
+  scroll-padding-top: calc(var(--header-h) + var(--s-3));
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+img, video, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+::selection { background: var(--tally); color: var(--bone); }
+
+/* Visible focus for keyboard users only — never remove the ring */
+:focus-visible {
+  outline: 2px solid var(--tally);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: absolute; top: -100px; left: var(--gutter); z-index: 300;
+  background: var(--bone); color: var(--ink);
+  padding: 12px 20px; font-family: var(--font-mono); font-size: 12px;
+  transition: top var(--dur-fast) var(--ease);
+}
+.skip-link:focus { top: 12px; }
+
+/* --------------------------------------------------------------------------
+   3. PRIMITIVES
+   -------------------------------------------------------------------------- */
+.wrap { max-width: var(--measure); margin-inline: auto; padding-inline: var(--gutter); }
+
+.mono {
+  font-family: var(--font-mono); font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase;
+  font-size: 11px; color: var(--grey);
+}
+
+.h-display {
+  font-family: var(--font-display); font-weight: 800;
+  letter-spacing: -.035em; line-height: .95;
+}
+
+.accent { color: var(--tally); }
+
+.lede { color: var(--grey); line-height: 1.7; font-size: clamp(15px, 1.5vw, 17px); }
+
+/* Film grain + vignette — the emulsion the whole page sits on */
+.grain, .vignette { position: fixed; inset: 0; pointer-events: none; }
+.grain {
+  z-index: 200; opacity: .04; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.vignette {
+  z-index: 199;
+  background: radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.6) 128%);
+}
+
+/* --------------------------------------------------------------------------
+   4. SCRUBBER — the signature.
+   A hairline playhead across the top. Scene markers double as navigation,
+   so the structural device is functional rather than decorative.
+   -------------------------------------------------------------------------- */
+.scrubber {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 120;
+  height: 2px; background: var(--line-soft);
+}
+.scrubber__fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--tally), var(--tally-warm));
+  transform-origin: left center;
+  will-change: width;
+}
+/* Scene marks are informational, not controls — they show where each scene
+   falls in the take. Navigation is the nav's job; making these clickable too
+   would put invisible hit-targets on top of the header. */
+.scrubber__marks { position: absolute; inset: 0; pointer-events: none; }
+
+.scrubber__mark {
+  position: absolute; top: 0; transform: translateX(-50%);
+  width: 1px; height: 6px;
+  background: var(--grey-dim);
+  transition: background var(--dur-mid) var(--ease), height var(--dur-mid) var(--ease);
+}
+.scrubber__mark[data-active='true'] { background: var(--tally); height: 10px; }
+
+@media (max-width: 760px) { .scrubber__marks { display: none; } }
+
+/* --------------------------------------------------------------------------
+   5. HEADER
+   -------------------------------------------------------------------------- */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 110;
+  height: var(--header-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding-inline: var(--gutter);
+  background: linear-gradient(to bottom, rgba(18,17,16,.94) 20%, rgba(18,17,16,0));
+  transition: background var(--dur-mid) var(--ease);
+}
+.site-header.is-stuck {
+  background: rgba(10,9,8,.86);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.logo {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--font-display); font-weight: 700;
+  font-size: 17px; letter-spacing: -.01em;
+}
+.logo__tally {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--tally); box-shadow: 0 0 10px var(--tally);
+  animation: tally-pulse 2.4s var(--ease-soft) infinite;
+}
+@keyframes tally-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+
+.site-nav { display: flex; gap: clamp(20px, 2.6vw, 34px); align-items: center; }
+.site-nav a {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--grey); position: relative; padding-block: 4px;
+  transition: color var(--dur-fast) var(--ease);
+}
+.site-nav a::after {
+  content: ''; position: absolute; left: 0; bottom: 0;
+  width: 100%; height: 1px; background: var(--tally);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform var(--dur-mid) var(--ease);
+}
+.site-nav a:hover, .site-nav a[aria-current='page'] { color: var(--bone); }
+.site-nav a:hover::after { transform: scaleX(1); transform-origin: left; }
+.site-nav a[aria-current='page']::after { transform: scaleX(1); }
+
+.timecode {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: .08em; color: var(--grey);
+  font-variant-numeric: tabular-nums;
+}
+.timecode__led {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--tally); box-shadow: 0 0 8px var(--tally);
+  animation: tally-pulse 1.6s var(--ease-soft) infinite;
+}
+
+/* Mobile menu */
+/* Bars are absolutely centred, then offset by transform only. Both arms
+   collapse to the exact same point before rotating, so the X is symmetric. */
+.nav-toggle { display: none; position: relative; width: 44px; height: 44px; margin-right: -10px; }
+.nav-toggle__bar {
+  position: absolute; top: 50%; left: 50%;
+  width: 22px; height: 2px; margin: -1px 0 0 -11px;
+  background: var(--bone);
+  transition: transform var(--dur-mid) var(--ease), opacity var(--dur-fast) var(--ease);
+}
+.nav-toggle__bar:nth-child(1) { transform: translateY(-6px); }
+.nav-toggle__bar:nth-child(3) { transform: translateY(6px); }
+
+.nav-toggle[aria-expanded='true'] .nav-toggle__bar:nth-child(1) { transform: rotate(45deg); }
+.nav-toggle[aria-expanded='true'] .nav-toggle__bar:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded='true'] .nav-toggle__bar:nth-child(3) { transform: rotate(-45deg); }
+
+@media (max-width: 860px) {
+  .timecode { display: none; }
+  .nav-toggle { display: block; }
+  .site-nav {
+    position: fixed; inset: var(--header-h) 0 auto 0;
+    flex-direction: column; align-items: flex-start; gap: 0;
+    background: rgba(10,9,8,.97);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--line);
+    padding: var(--s-2) var(--gutter) var(--s-4);
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path var(--dur-slow) var(--ease);
+  }
+  .site-nav[data-open='true'] { clip-path: inset(0 0 0 0); }
+  .site-nav a { font-size: 15px; letter-spacing: .1em; padding-block: 16px; width: 100%; }
+}
+
+/* --------------------------------------------------------------------------
+   6. HERO
+   -------------------------------------------------------------------------- */
+.hero {
+  min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative;
+  padding-top: calc(var(--header-h) + var(--s-4));
+  padding-bottom: var(--s-6);
+}
+.hero__eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: var(--s-3); }
+.hero__eyebrow .bar {
+  width: 34px; height: 1px; background: var(--tally);
+  transform: scaleX(0); transform-origin: left;
+}
+.hero__title { font-size: clamp(42px, 8.8vw, 122px); max-width: 14ch; }
+/* Each line is a mask; the text rides up into frame like a title card */
+.hero__title .line { display: block; overflow: hidden; padding-bottom: .06em; }
+.hero__title .line > span { display: block; transform: translateY(110%); }
+.hero__sub { margin-top: var(--s-3); max-width: 48ch; }
+.hero__cta { margin-top: var(--s-4); display: flex; gap: 14px; flex-wrap: wrap; }
+
+.hero__meta {
+  position: absolute; bottom: var(--s-4); right: var(--gutter);
+  text-align: right; display: grid; gap: 4px;
+}
+.scroll-cue {
+  position: absolute; bottom: var(--s-4); left: var(--gutter);
+  display: flex; align-items: center; gap: 11px;
+}
+.scroll-cue .rail {
+  width: 1px; height: 38px; overflow: hidden;
+  background: var(--line);
+}
+.scroll-cue .rail::after {
+  content: ''; display: block; width: 100%; height: 100%;
+  background: linear-gradient(var(--tally), transparent);
+  animation: cue-run 2.1s var(--ease-soft) infinite;
+}
+@keyframes cue-run {
+  0%   { transform: translateY(-100%); }
+  60%  { transform: translateY(100%); }
+  100% { transform: translateY(100%); }
+}
+@media (max-width: 860px) { .hero__meta { display: none; } }
+
+/* --------------------------------------------------------------------------
+   7. BUTTONS
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 15px 28px; min-height: 48px;      /* comfortable touch target */
+  border: 1px solid var(--bone); border-radius: 2px;
+  cursor: pointer; position: relative;
+  /* The wipe is a background layer rather than a pseudo-element, so it paints
+     above the button's own background colour on every variant. */
+  background-image: linear-gradient(var(--tally), var(--tally));
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 0% 100%;
+  transition:
+    background-size var(--dur-mid) var(--ease),
+    color var(--dur-mid) var(--ease),
+    border-color var(--dur-mid) var(--ease);
+}
+.btn:hover, .btn:focus-visible { background-size: 100% 100%; }
+
+.btn--primary { background-color: var(--bone); color: var(--ink); }
+.btn--primary:hover, .btn--primary:focus-visible { color: var(--bone); border-color: var(--tally); }
+.btn--ghost { border-color: var(--line); color: var(--grey); }
+.btn--ghost:hover, .btn--ghost:focus-visible { color: var(--bone); border-color: var(--tally); }
+.btn__arrow { transition: transform var(--dur-mid) var(--ease); }
+.btn:hover .btn__arrow { transform: translateX(4px); }
+
+/* --------------------------------------------------------------------------
+   8. SECTION HEADS
+   -------------------------------------------------------------------------- */
+.section-head {
+  padding: var(--s-7) 0 var(--s-4);
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: var(--s-3); flex-wrap: wrap;
+}
+.section-head h2 { font-size: clamp(30px, 4.4vw, 50px); margin-top: 12px; }
+.section-head p { color: var(--grey); max-width: 40ch; font-size: 14.5px; line-height: 1.65; }
+
+/* --------------------------------------------------------------------------
+   9. WORK / SCENES
+   -------------------------------------------------------------------------- */
+.scene { border-top: 1px solid var(--line); padding: var(--s-5) 0; }
+.scenes .scene:last-child { border-bottom: 1px solid var(--line); }
+.scene__inner {
+  display: grid; grid-template-columns: 1.08fr .92fr;
+  gap: clamp(32px, 5vw, 64px); align-items: center;
+}
+/* Alternate which side the frame sits on, so the eye crosses the page */
+.scene:nth-child(even) .scene__inner { grid-template-columns: .92fr 1.08fr; }
+.scene:nth-child(even) .scene__frame { order: 2; }
+.scene:nth-child(even) .scene__text { order: 1; }
+
+.scene__tag { margin-bottom: var(--s-2); color: var(--tally-text); }
+.scene__title { font-size: clamp(28px, 3.4vw, 42px); margin-bottom: var(--s-2); }
+.scene__body { color: var(--grey); line-height: 1.75; font-size: 15px; max-width: 46ch; margin-bottom: var(--s-3); }
+
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: var(--s-3); }
+.chip {
+  font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 7px 13px; border: 1px solid var(--line);
+  border-radius: 20px; color: var(--grey);
+}
+
+.text-link {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--font-mono); font-size: 12px;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--bone);
+  border-bottom: 1px solid var(--tally); padding-bottom: 5px;
+  transition: gap var(--dur-mid) var(--ease);
+}
+.text-link:hover, .text-link:focus-visible { gap: 15px; }
+
+@media (max-width: 900px) {
+  .scene__inner,
+  .scene:nth-child(even) .scene__inner { grid-template-columns: 1fr; gap: var(--s-3); }
+  .scene:nth-child(even) .scene__frame { order: 0; }
+  .scene { padding: var(--s-4) 0; }
+}
+
+/* --------------------------------------------------------------------------
+   10. FRAME — image container with a slate placeholder underneath.
+   Until real stills land, the slate reads as an intentional production
+   artifact rather than a broken image.
+   -------------------------------------------------------------------------- */
+.frame {
+  position: relative; aspect-ratio: 16 / 10;   /* reserved space => no CLS */
+  border-radius: 5px; overflow: hidden;
+  background: var(--ink-deep);
+  border: 1px solid var(--line-soft);
+  box-shadow: 0 40px 80px -34px rgba(0,0,0,.75);
+}
+.frame__slate {
+  position: absolute; inset: 0;
+  display: grid; place-content: center; gap: 10px; text-align: center;
+  background:
+    repeating-linear-gradient(180deg, rgba(239,236,228,.022) 0 1px, transparent 1px 4px),
+    var(--ink-deep);
+}
+.frame__slate .id {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--grey);
+}
+.frame__slate .status { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .18em; color: var(--grey-dim); }
+/* Camera framing marks in the corners */
+.frame__slate::before, .frame__slate::after {
+  content: ''; position: absolute; width: 18px; height: 18px;
+  border: 1px solid var(--line);
+}
+.frame__slate::before { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
+.frame__slate::after  { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+
+/* Real media fades over the slate once decoded */
+.frame__media {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+.frame__media.is-ready { opacity: 1; }
+.frame::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(10,9,8,0) 58%, rgba(10,9,8,.72) 100%);
+}
+
+/* Whole-frame link: lifts slightly on hover, like a shot being selected */
+a.frame-link { display: block; }
+a.frame-link .frame {
+  transition: transform var(--dur-slow) var(--ease), border-color var(--dur-mid) var(--ease);
+}
+a.frame-link:hover .frame,
+a.frame-link:focus-visible .frame {
+  transform: translateY(-5px); border-color: var(--line);
+}
+
+/* --------------------------------------------------------------------------
+   11. APPROACH
+   -------------------------------------------------------------------------- */
+.approach { padding: var(--s-4) 0 var(--s-7); border-top: 1px solid var(--line); }
+.approach__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 80px); align-items: start; }
+.approach__lead {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(23px, 2.9vw, 34px); line-height: 1.32; letter-spacing: -.018em;
+}
+.approach__body p { color: var(--grey); line-height: 1.8; font-size: 15px; margin-bottom: var(--s-2); }
+.approach__body strong { color: var(--bone); font-weight: 600; }
+.footnote { font-size: 12px; color: var(--grey-dim); }
+
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3) var(--s-4); margin-top: var(--s-4); }
+.stat b {
+  display: block; font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(30px, 3.8vw, 44px); letter-spacing: -.025em; line-height: 1;
+  margin-bottom: 7px;
+}
+.stat span { color: var(--grey); font-size: 13px; line-height: 1.5; }
+
+@media (max-width: 900px) { .approach__grid { grid-template-columns: 1fr; gap: var(--s-4); } }
+
+/* --------------------------------------------------------------------------
+   12. SERVICES — the slate list
+   -------------------------------------------------------------------------- */
+.services { padding-bottom: var(--s-7); }
+.svc-list { border-top: 1px solid var(--line); }
+.svc {
+  display: grid; grid-template-columns: 68px 1.25fr 1fr;
+  gap: var(--s-3); align-items: center;
+  padding: var(--s-3) 0; border-bottom: 1px solid var(--line);
+  position: relative; transition: padding-left var(--dur-slow) var(--ease);
+}
+/* A tally wipe sweeps in from the left edge on hover */
+.svc::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: var(--tally); transform: scaleY(0); transform-origin: bottom;
+  transition: transform var(--dur-mid) var(--ease);
+}
+.svc:hover { padding-left: 16px; }
+.svc:hover::before { transform: scaleY(1); transform-origin: top; }
+.svc .idx { font-family: var(--font-mono); font-size: 12px; color: var(--grey-dim); }
+.svc h3 { font-family: var(--font-display); font-weight: 600; font-size: clamp(18px, 2vw, 25px); letter-spacing: -.015em; }
+.svc p { color: var(--grey); font-size: 13.5px; line-height: 1.6; }
+
+@media (max-width: 720px) {
+  .svc { grid-template-columns: 40px 1fr; row-gap: 6px; }
+  .svc p { grid-column: 2; }
+}
+
+/* --------------------------------------------------------------------------
+   13. CONTACT + FOOTER
+   -------------------------------------------------------------------------- */
+.contact { padding: var(--s-7) 0 var(--s-6); border-top: 1px solid var(--line); text-align: center; }
+.contact h2 { font-size: clamp(36px, 7.2vw, 92px); max-width: 15ch; margin: 12px auto var(--s-4); }
+.contact__actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: var(--s-6); }
+.contact__meta {
+  display: flex; justify-content: center; gap: var(--s-2) var(--s-4);
+  flex-wrap: wrap; color: var(--grey); font-size: 13.5px;
+}
+.contact__meta a { transition: color var(--dur-fast) var(--ease); }
+.contact__meta a:hover { color: var(--bone); }
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: var(--s-3) var(--gutter);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+}
+.site-footer .mono { font-size: 10px; }
+
+/* --------------------------------------------------------------------------
+   14. CASE STUDY PAGES
+   -------------------------------------------------------------------------- */
+.case-hero { padding: calc(var(--header-h) + var(--s-6)) 0 var(--s-5); }
+.case-hero__back { display: inline-flex; align-items: center; gap: 9px; margin-bottom: var(--s-4); }
+.case-hero__back:hover { color: var(--bone); }
+.case-hero h1 { font-size: clamp(40px, 7.4vw, 92px); max-width: 13ch; margin: 12px 0 var(--s-3); }
+.case-hero__sub { max-width: 52ch; }
+
+.case-facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--s-3); margin-top: var(--s-5);
+  border-top: 1px solid var(--line); padding-top: var(--s-3);
+}
+.case-facts dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--grey-dim); margin-bottom: 7px; }
+.case-facts dd { font-size: 14.5px; color: var(--bone); line-height: 1.5; }
+
+.case-body { padding: var(--s-5) 0 var(--s-6); }
+.case-block { border-top: 1px solid var(--line); padding: var(--s-4) 0; display: grid; grid-template-columns: 200px 1fr; gap: var(--s-4); }
+.case-block > h2 { font-family: var(--font-mono); font-weight: 500; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--tally-text); padding-top: 5px; }
+.case-block__text p { color: var(--grey); line-height: 1.8; font-size: 15.5px; margin-bottom: var(--s-2); max-width: 62ch; }
+.case-block__text p:last-child { margin-bottom: 0; }
+.case-block__text strong { color: var(--bone); font-weight: 600; }
+
+.case-list { list-style: none; display: grid; gap: var(--s-2); max-width: 62ch; }
+.case-list li { display: grid; grid-template-columns: 26px 1fr; gap: 12px; color: var(--grey); line-height: 1.7; font-size: 15px; }
+.case-list li::before {
+  content: attr(data-n); font-family: var(--font-mono); font-size: 11px;
+  color: var(--tally-text); padding-top: 4px;
+}
+.case-list strong { color: var(--bone); font-weight: 600; }
+
+.case-figure { margin: var(--s-4) 0; }
+.case-figure figcaption { margin-top: 12px; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--grey-dim); }
+
+@media (max-width: 860px) {
+  .case-block { grid-template-columns: 1fr; gap: var(--s-2); }
+}
+
+/* Next-take footer — the reel keeps running */
+.next-take { border-top: 1px solid var(--line); padding: var(--s-5) 0 var(--s-6); }
+.next-take a { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; }
+.next-take h2 { font-size: clamp(30px, 5.2vw, 60px); transition: color var(--dur-mid) var(--ease); }
+.next-take a:hover h2, .next-take a:focus-visible h2 { color: var(--tally); }
+
+/* --------------------------------------------------------------------------
+   15. REVEAL — scroll-in choreography
+   -------------------------------------------------------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity var(--dur-slow) var(--ease),
+    transform var(--dur-slow) var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal].is-in { opacity: 1; transform: none; }
+
+/* Frames get a touch of scale so they feel like they settle into focus */
+[data-reveal='frame'] { transform: translateY(34px) scale(.975); }
+
+/* Hero load sequence — driven by class on <body>, not per-element JS timers */
+.hero__eyebrow .bar,
+.hero__title .line > span,
+.hero__sub,
+.hero__cta,
+.hero__meta,
+.scroll-cue { transition: transform 1s var(--ease), opacity 1s var(--ease); }
+
+.hero__sub, .hero__cta, .hero__meta, .scroll-cue { opacity: 0; transform: translateY(16px); }
+
+.is-loaded .hero__eyebrow .bar   { transform: scaleX(1); transition-delay: .1s; }
+.is-loaded .hero__title .line:nth-child(1) > span { transform: translateY(0); transition-delay: .18s; }
+.is-loaded .hero__title .line:nth-child(2) > span { transform: translateY(0); transition-delay: .29s; }
+.is-loaded .hero__title .line:nth-child(3) > span { transform: translateY(0); transition-delay: .40s; }
+.is-loaded .hero__sub    { opacity: 1; transform: none; transition-delay: .52s; }
+.is-loaded .hero__cta    { opacity: 1; transform: none; transition-delay: .62s; }
+.is-loaded .hero__meta   { opacity: 1; transform: none; transition-delay: .72s; }
+.is-loaded .scroll-cue   { opacity: 1; transform: none; transition-delay: .82s; }
+
+/* --------------------------------------------------------------------------
+   16. REDUCED MOTION
+   Everything still arrives — it just stops moving. Nothing is left invisible.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal],
+  .hero__sub, .hero__cta, .hero__meta, .scroll-cue { opacity: 1 !important; transform: none !important; }
+  .hero__title .line > span { transform: none !important; }
+  .hero__eyebrow .bar { transform: scaleX(1) !important; }
+  .svc:hover { padding-left: 0; }
+  .scroll-cue .rail::after { display: none; }
+  .frame__media { opacity: 1; }
+}
+
+/* --------------------------------------------------------------------------
+   17. NO-JS FALLBACK — content must never be trapped behind JS
+   -------------------------------------------------------------------------- */
+.no-js [data-reveal],
+.no-js .hero__sub, .no-js .hero__cta, .no-js .hero__meta, .no-js .scroll-cue { opacity: 1; transform: none; }
+.no-js .hero__title .line > span { transform: none; }
+.no-js .hero__eyebrow .bar { transform: scaleX(1); }
+.no-js .scrubber { display: none; }
+
+/* --------------------------------------------------------------------------
+   18. PRINT
+   -------------------------------------------------------------------------- */
+@media print {
+  .grain, .vignette, .scrubber, .site-header, .scroll-cue { display: none !important; }
+  body { background: #fff; color: #000; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+}
