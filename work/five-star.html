@@ -83,33 +83,48 @@ d.classList.remove('is-loading');d.classList.add('is-revealed');}},6000);}());
 
 <main id="main">
 
-  <section class="wrap case-hero">
-    <a href="../index.html#work" class="text-link case-hero__back"><span aria-hidden="true">←</span> All takes</a>
+  <!-- ============================ THE STAGE ============================ -->
+  <section class="stage" data-stage>
+    <div class="stage__inner">
 
-    <p class="mono">Scene 02 — Client work</p>
-    <h1 class="h-display">Thirty-five years, told properly.</h1>
-    <p class="case-hero__sub lede">
-      Five Star Food Export has been dehydrating and shipping food for three and a half
-      decades. The expertise was real and deep. The website gave away none of it.
-    </p>
+      <div class="stage__head">
+        <a href="../index.html#work" class="text-link stage__back"><span aria-hidden="true">←</span> All takes</a>
+        <span class="mono">Scene 02 — Client work</span>
+        <h1 class="h-display">Five Star Food Export</h1>
+      </div>
 
+      <div class="stage__plate">
+      <div class="stage__screen" data-depth="0.25">
+        <img src="../assets/posters/five-star.jpg" alt="The Five Star Food Export site." loading="eager" decoding="async" width="1280" height="720">
+        <video data-src="../videos/five-star-dark.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+      </div>
+
+      <div class="stage__evidence">
+        <figure class="stage__card stage__card--a" data-depth="1.7"><img src="../assets/stills/fs-1.jpg" alt="Dehydrated product photography from the dark theme" loading="lazy" decoding="async" width="760" height="428"></figure>
+        <figure class="stage__card stage__card--b" data-depth="2.5"><img src="../assets/stills/fs-2.jpg" alt="A stage of the twelve-step process sequence" loading="lazy" decoding="async" width="760" height="428"></figure>
+        <figure class="stage__card stage__card--c" data-depth="1.1"><img src="../assets/stills/fs-3.jpg" alt="The light theme with the export figures" loading="lazy" decoding="async" width="760" height="428"></figure>
+
+        <dl class="stage__spec" data-depth="2.1">
+          <dt>Scope</dt><dd>Full multi-page rebuild</dd>
+          <dt>Status</dt><dd>Live</dd>
+          <dt>Palette</dt><dd><span class="stage__swatches" role="img" aria-label="Colours sampled from the live site"><i style="background:#5B5133"></i><i style="background:#685436"></i><i style="background:#363827"></i></span></dd>
+        </dl>
+      </div>
+      </div>
+
+      <p class="stage__logo"><span>FIVE STAR FOOD EXPORT</span></p>
+    </div>
+  </section>
+
+  <section class="wrap case-intro">
+    <p class="lede" data-reveal>Five Star Food Export has been dehydrating and shipping food for three and a half
+      decades. The expertise was real and deep. The website gave away none of it.</p>
     <dl class="case-facts" data-reveal-group>
       <div data-reveal><dt>Client</dt><dd>Five Star Food Export</dd></div>
       <div data-reveal><dt>Scope</dt><dd>Full multi-page rebuild</dd></div>
       <div data-reveal><dt>Role</dt><dd>Design, build, content structure</dd></div>
       <div data-reveal><dt>Status</dt><dd>Live</dd></div>
     </dl>
-  </section>
-
-  <section class="wrap">
-    <figure class="case-figure" data-scene="The film">
-      <div class="frame" data-reveal="frame">
-        <div class="frame__slate"><span class="id">Five Star Food Export</span></div>
-        <img class="frame__media" src="../assets/posters/five-star.jpg" alt="The Five Star Food Export site in its dark theme: “From our fields to the world’s kitchens” over dehydrated onion flakes." loading="lazy" decoding="async" width="1280" height="720">
-        <video class="frame__media" data-src="../videos/five-star-dark.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
-      </div>
-      <figcaption>Dark theme — the twelve-step process, one scroll, start to finish.</figcaption>
-    </figure>
   </section>
 
   <section class="wrap case-body">
@@ -216,5 +231,6 @@ d.classList.remove('is-loading');d.classList.add('is-revealed');}},6000);}());
 <script src="../assets/js/projector.js" defer></script>
 <script src="../assets/js/longtake.js" defer></script>
 <script src="../assets/js/motion.js" defer></script>
+<script src="../assets/js/stage.js" defer></script>
 </body>
 </html>

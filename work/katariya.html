@@ -83,34 +83,49 @@ d.classList.remove('is-loading');d.classList.add('is-revealed');}},6000);}());
 
 <main id="main">
 
-  <section class="wrap case-hero">
-    <a href="../index.html#work" class="text-link case-hero__back"><span aria-hidden="true">←</span> All takes</a>
+  <!-- ============================ THE STAGE ============================ -->
+  <section class="stage" data-stage>
+    <div class="stage__inner">
 
-    <p class="mono">Scene 03 — Client work</p>
-    <h1 class="h-display">A showroom you can walk before you drive there.</h1>
-    <p class="case-hero__sub lede">
-      Katariya is a family menswear showroom in Mahuva — sherwanis and groom safas at one
+      <div class="stage__head">
+        <a href="../index.html#work" class="text-link stage__back"><span aria-hidden="true">←</span> All takes</a>
+        <span class="mono">Scene 03 — Client work</span>
+        <h1 class="h-display">Katariya</h1>
+      </div>
+
+      <div class="stage__plate">
+      <div class="stage__screen" data-depth="0.25">
+        <img src="../assets/posters/katariya.jpg" alt="The Katariya site." loading="eager" decoding="async" width="1280" height="720">
+        <video data-src="../videos/katariya.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+      </div>
+
+      <div class="stage__evidence">
+        <figure class="stage__card stage__card--a" data-depth="1.7"><img src="../assets/stills/kt-1.jpg" alt="The showroom interior from the walk-through" loading="lazy" decoding="async" width="760" height="428"></figure>
+        <figure class="stage__card stage__card--b" data-depth="2.5"><img src="../assets/stills/kt-2.jpg" alt="The collections grid" loading="lazy" decoding="async" width="760" height="428"></figure>
+        <figure class="stage__card stage__card--c" data-depth="1.1"><img src="../assets/stills/kt-3.jpg" alt="An offer from the on-the-racks section" loading="lazy" decoding="async" width="760" height="428"></figure>
+
+        <dl class="stage__spec" data-depth="2.1">
+          <dt>Scope</dt><dd>Single-page showroom site</dd>
+          <dt>Status</dt><dd>In build</dd>
+          <dt>Palette</dt><dd><span class="stage__swatches" role="img" aria-label="Colours sampled from the live site"><i style="background:#937C56"></i><i style="background:#8F8162"></i><i style="background:#9B928E"></i></span></dd>
+        </dl>
+      </div>
+      </div>
+
+      <p class="stage__logo"><span>KATARIYA — MAHUVA</span></p>
+    </div>
+  </section>
+
+  <section class="wrap case-intro">
+    <p class="lede" data-reveal>Katariya is a family menswear showroom in Mahuva — sherwanis and groom safas at one
       end of the rack, everyday denim at the other. Nothing about the business is online.
-      The site's job is not a checkout. It is getting someone through the door.
-    </p>
-
+      The site's job is not a checkout. It is getting someone through the door.</p>
     <dl class="case-facts" data-reveal-group>
       <div data-reveal><dt>Client</dt><dd>Katariya, Mahuva</dd></div>
       <div data-reveal><dt>Scope</dt><dd>Single-page showroom site</dd></div>
       <div data-reveal><dt>Role</dt><dd>Design, build</dd></div>
       <div data-reveal><dt>Status</dt><dd>In build — not yet launched</dd></div>
     </dl>
-  </section>
-
-  <section class="wrap">
-    <figure class="case-figure" data-scene="The film">
-      <div class="frame" data-reveal="frame">
-        <div class="frame__slate"><span class="id">Katariya</span></div>
-        <img class="frame__media" src="../assets/posters/katariya.jpg" alt="The Katariya homepage: the headline “Dress for every occasion” over the showroom interior." loading="lazy" decoding="async" width="1280" height="720">
-        <video class="frame__media" data-src="../videos/katariya.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
-      </div>
-      <figcaption>“Scroll to step inside” — the page is a walk through the shop.</figcaption>
-    </figure>
   </section>
 
   <section class="wrap case-body">
@@ -192,5 +207,6 @@ d.classList.remove('is-loading');d.classList.add('is-revealed');}},6000);}());
 <script src="../assets/js/projector.js" defer></script>
 <script src="../assets/js/longtake.js" defer></script>
 <script src="../assets/js/motion.js" defer></script>
+<script src="../assets/js/stage.js" defer></script>
 </body>
 </html>
