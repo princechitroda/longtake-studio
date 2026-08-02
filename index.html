@@ -1,430 +1,355 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Longtake — Websites that move like film</title>
-<meta name="description" content="Cinematic, scroll-driven websites for brands that refuse to look like everyone else. Founder-led studio, India to worldwide.">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Longtake Studio — Websites that move like film</title>
+<meta name="description" content="Cinematic, scroll-driven websites for brands that refuse to look like everyone else. A founder-led web and motion studio in Gujarat, India, working worldwide.">
+<link rel="canonical" href="https://longtakestudio.com/">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://longtakestudio.com/">
+<meta property="og:site_name" content="Longtake Studio">
+<meta property="og:title" content="Longtake Studio — Websites that move like film">
+<meta property="og:description" content="Cinematic, scroll-driven websites for brands that refuse to look like everyone else.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#121110">
+
 <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/icons/favicon-180.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root{
-  --ink:#121110;
-  --ink-deep:#0a0908;
-  --bone:#EFECE4;
-  --tally:#E4341C;
-  --grey:#8a8a83;
-  --line:rgba(239,236,228,.12);
-  --line-soft:rgba(239,236,228,.06);
-  --ease:cubic-bezier(.16,1,.3,1);
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  background:var(--ink);
-  color:var(--bone);
-  font-family:'Inter',system-ui,sans-serif;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-::selection{background:var(--tally);color:var(--bone)}
-a{color:inherit;text-decoration:none}
-img,video{display:block;max-width:100%}
-.wrap{max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,64px)}
-.mono{font-family:'JetBrains Mono',monospace;font-weight:500;letter-spacing:.16em;text-transform:uppercase;font-size:11px;color:var(--grey)}
-.h-display{font-family:'Archivo',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:.98}
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/css/longtake.css">
 
-/* grain overlay */
-.grain{position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.035;mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Longtake Studio",
+  "description": "Cinematic, scroll-driven websites, brand identity and motion for brands worldwide.",
+  "url": "https://longtakestudio.com/",
+  "email": "prince@longtakestudio.com",
+  "telephone": "+91-70410-92923",
+  "address": { "@type": "PostalAddress", "addressLocality": "Mahuva", "addressRegion": "Gujarat", "addressCountry": "IN" },
+  "areaServed": "Worldwide",
+  "sameAs": [
+    "https://instagram.com/longtake.studio",
+    "https://youtube.com/@LongtakeStudioo"
+  ]
 }
-.vignette{position:fixed;inset:0;pointer-events:none;z-index:199;
-  background:radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 130%);
-}
-
-/* ---------- NAV ---------- */
-header{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:22px clamp(20px,5vw,64px);
-  background:linear-gradient(to bottom, rgba(18,17,16,.92), transparent);
-  backdrop-filter:blur(2px);
-}
-.logo{display:flex;align-items:center;gap:9px;font-family:'Archivo';font-weight:700;font-size:18px;letter-spacing:-.01em}
-.logo .dot{width:7px;height:7px;border-radius:50%;background:var(--tally)}
-nav.links{display:flex;gap:34px;align-items:center}
-nav.links a{font-family:'JetBrains Mono';font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);transition:color .25s}
-nav.links a:hover{color:var(--bone)}
-.rec{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono';font-size:11px;letter-spacing:.1em;color:var(--grey)}
-.rec .led{width:6px;height:6px;border-radius:50%;background:var(--tally);box-shadow:0 0 8px var(--tally);animation:pulse 1.6s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.nav-toggle{display:none}
-
-@media(max-width:760px){
-  nav.links{display:none}
-  .rec{display:none}
-}
-
-/* ---------- HERO ---------- */
-.hero{
-  min-height:100svh;display:flex;flex-direction:column;justify-content:center;
-  position:relative;padding-top:90px;
-}
-.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:22px;opacity:0}
-.hero-eyebrow .bar{width:34px;height:1px;background:var(--tally)}
-.hero h1{
-  font-size:clamp(40px,8.6vw,116px);
-  max-width:15ch;
-}
-.hero h1 .line{display:block;overflow:hidden}
-.hero h1 .line span{display:inline-block;transform:translateY(115%);opacity:0}
-.hero h1 .accent{color:var(--tally)}
-.hero-sub{
-  margin-top:28px;max-width:46ch;font-size:clamp(15px,1.6vw,18px);
-  line-height:1.65;color:var(--grey);opacity:0;transform:translateY(14px);
-}
-.hero-cta{margin-top:40px;display:flex;gap:16px;align-items:center;opacity:0;transform:translateY(14px)}
-.btn{
-  font-family:'JetBrains Mono';font-size:12px;letter-spacing:.1em;text-transform:uppercase;
-  padding:15px 28px;border:1px solid var(--bone);border-radius:2px;
-  transition:background .3s var(--ease),color .3s var(--ease);
-}
-.btn.primary{background:var(--bone);color:var(--ink)}
-.btn.primary:hover{background:var(--tally);border-color:var(--tally);color:var(--bone)}
-.btn.ghost{border-color:var(--line);color:var(--grey)}
-.btn.ghost:hover{border-color:var(--bone);color:var(--bone)}
-
-.scroll-cue{
-  position:absolute;bottom:40px;left:clamp(20px,5vw,64px);
-  display:flex;align-items:center;gap:10px;opacity:0;
-}
-.scroll-cue .line{width:1px;height:38px;background:linear-gradient(var(--tally),transparent);animation:run 1.8s ease-in-out infinite}
-@keyframes run{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-
-/* ---------- SECTION LABEL ---------- */
-.section-head{padding:120px 0 56px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.section-head .num{font-size:13px}
-.section-head h2{font-size:clamp(28px,4vw,44px);margin-top:10px}
-.section-head p{color:var(--grey);max-width:38ch;font-size:14.5px;line-height:1.6}
-
-/* ---------- WORK ---------- */
-.scene{
-  position:relative;border-top:1px solid var(--line);
-  padding:80px 0;
-}
-.scene:last-child{border-bottom:1px solid var(--line)}
-.scene-inner{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
-.scene:nth-child(even) .scene-inner{grid-template-columns:.9fr 1.1fr}
-.scene:nth-child(even) .scene-media{order:2}
-.scene-media{
-  position:relative;aspect-ratio:16/10;border-radius:6px;overflow:hidden;
-  background-size:cover;background-position:center;
-  box-shadow:0 40px 80px -30px rgba(0,0,0,.6);
-  opacity:0;transform:translateY(40px) scale(.97);
-}
-.scene-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .7s var(--ease)}
-.scene-media video.ready{opacity:1}
-.scene-media::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg, rgba(10,9,8,0) 55%, rgba(10,9,8,.75) 100%);
-}
-.scene-text{opacity:0;transform:translateY(24px)}
-.scene-tag{margin-bottom:16px;color:var(--tally)}
-.scene h3{font-size:clamp(26px,3.2vw,40px);margin-bottom:16px}
-.scene p{color:var(--grey);line-height:1.7;font-size:15px;max-width:44ch;margin-bottom:22px}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px}
-.chip{
-  font-family:'JetBrains Mono';font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
-  padding:7px 12px;border:1px solid var(--line);border-radius:20px;color:var(--grey);
-}
-.scene-link{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono';font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--bone);border-bottom:1px solid var(--tally);padding-bottom:4px;transition:gap .3s}
-.scene-link:hover{gap:14px}
-
-@media(max-width:860px){
-  .scene-inner,.scene:nth-child(even) .scene-inner{grid-template-columns:1fr;gap:28px}
-  .scene:nth-child(even) .scene-media{order:0}
-  .scene{padding:56px 0}
-}
-
-/* ---------- APPROACH ---------- */
-.approach{padding:60px 0 130px;border-top:1px solid var(--line)}
-.approach-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start}
-.approach-lead{font-family:'Archivo';font-weight:600;font-size:clamp(22px,2.8vw,32px);line-height:1.3;letter-spacing:-.01em}
-.approach-lead .accent{color:var(--tally)}
-.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:48px}
-.stat b{display:block;font-family:'Archivo';font-weight:700;font-size:clamp(30px,4vw,44px);letter-spacing:-.02em}
-.stat span{color:var(--grey);font-size:13px}
-.approach-body p{color:var(--grey);line-height:1.75;font-size:15px;margin-bottom:18px}
-.approach-body strong{color:var(--bone);font-weight:600}
-@media(max-width:860px){.approach-grid{grid-template-columns:1fr;gap:40px}.stat-row{grid-template-columns:1fr 1fr}}
-
-/* ---------- SERVICES ---------- */
-.services{padding:0 0 130px}
-.svc-list{border-top:1px solid var(--line)}
-.svc{
-  display:grid;grid-template-columns:70px 1.3fr 1fr;gap:24px;align-items:center;
-  padding:30px 0;border-bottom:1px solid var(--line);
-  transition:padding-left .35s var(--ease);
-}
-.svc:hover{padding-left:12px}
-.svc .idx{font-family:'JetBrains Mono';font-size:12px;color:var(--grey)}
-.svc h4{font-family:'Archivo';font-weight:600;font-size:clamp(18px,2vw,24px);letter-spacing:-.01em}
-.svc p{color:var(--grey);font-size:13.5px;line-height:1.6}
-@media(max-width:700px){.svc{grid-template-columns:40px 1fr;row-gap:8px}.svc p{grid-column:2}}
-
-/* ---------- CONTACT ---------- */
-.contact{
-  padding:140px 0 90px;border-top:1px solid var(--line);
-  text-align:center;
-}
-.contact .mono{margin-bottom:22px}
-.contact h2{font-size:clamp(34px,7vw,86px);max-width:16ch;margin:0 auto 34px}
-.contact h2 .accent{color:var(--tally)}
-.contact-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:70px}
-.contact-meta{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;color:var(--grey);font-size:13.5px}
-.contact-meta a:hover{color:var(--bone)}
-
-footer{border-top:1px solid var(--line);padding:26px clamp(20px,5vw,64px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-footer .mono{font-size:10px}
-
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
-.reveal.in{opacity:1;transform:translateY(0)}
-</style>
+</script>
 </head>
-<body>
 
-<div class="grain"></div>
-<div class="vignette"></div>
+<body data-runtime="260">
 
-<header>
-  <a href="#top" class="logo"><span class="dot"></span>LONGTAKE</a>
-  <nav class="links">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- The playhead. Scroll position drives it; the marks are also the nav. -->
+<div class="scrubber" aria-hidden="true">
+  <div class="scrubber__fill"></div>
+  <div class="scrubber__marks"></div>
+</div>
+
+<header class="site-header">
+  <a href="#main" class="logo"><span class="logo__tally" aria-hidden="true"></span>LONGTAKE</a>
+
+  <nav class="site-nav" id="site-nav" aria-label="Primary">
     <a href="#work">Work</a>
     <a href="#approach">Approach</a>
     <a href="#services">Services</a>
     <a href="#contact">Contact</a>
   </nav>
-  <div class="rec"><span class="led"></span><span id="timecode">REC 00:00:00</span></div>
+
+  <p class="timecode">
+    <span class="timecode__led" aria-hidden="true"></span>
+    <span class="sr-only">Scroll position as timecode:</span>
+    <span data-timecode>00:00:00:00</span>
+  </p>
+
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+    <span class="nav-toggle__bar" aria-hidden="true"></span>
+    <span class="nav-toggle__bar" aria-hidden="true"></span>
+    <span class="nav-toggle__bar" aria-hidden="true"></span>
+  </button>
 </header>
 
-<main id="top">
+<main id="main">
 
-  <!-- ================= HERO ================= -->
-  <section class="hero wrap">
-    <div class="hero-eyebrow" id="eyebrow"><span class="bar"></span><span class="mono">Web &amp; motion studio — India to worldwide</span></div>
-    <h1 class="h-display" id="heroTitle">
-      <span class="line"><span>Websites that</span></span>
-      <span class="line"><span>move like <span class="accent">film</span>.</span></span>
-    </h1>
-    <p class="hero-sub" id="heroSub">Cinematic, scroll-driven builds for brands that refuse to look like everyone else. One continuous take, not a page of disconnected blocks.</p>
-    <div class="hero-cta" id="heroCta">
-      <a href="#work" class="btn primary">See the work</a>
-      <a href="#contact" class="btn ghost">Start a project</a>
+  <!-- ============================ HERO ============================ -->
+  <section class="hero">
+    <div class="hero__bg" aria-hidden="true">
+      <img src="assets/posters/hero.jpg" alt="" width="1024" height="576" decoding="async">
+      <video data-src="videos/hero-loop.mp4" data-defer muted loop playsinline preload="none"></video>
     </div>
-    <div class="scroll-cue" id="scrollCue"><span class="line"></span><span class="mono">Scroll</span></div>
+
+    <div class="hero__inner">
+      <p class="hero__eyebrow">
+        <span class="bar" aria-hidden="true"></span>
+        <span class="mono">Web &amp; motion studio — India to worldwide</span>
+      </p>
+
+      <h1 class="hero__title h-display">
+        <span class="line"><span>Websites that</span></span>
+        <span class="line"><span>move like <em class="accent" style="font-style:normal">film</em>.</span></span>
+      </h1>
+
+      <p class="hero__sub lede">
+        Cinematic, scroll-driven builds for brands that refuse to look like everyone else.
+        One continuous take — not a page of disconnected blocks.
+      </p>
+
+      <div class="hero__cta">
+        <a href="#work" class="btn btn--primary">See the work <span class="btn__arrow" aria-hidden="true">→</span></a>
+        <a href="#contact" class="btn btn--ghost">Start a project</a>
+      </div>
+    </div>
+
+    <div class="hero__meta">
+      <span class="mono">Four builds, three live</span>
+      <span class="mono">Mahuva, Gujarat</span>
+    </div>
+
+    <p class="scroll-cue">
+      <span class="rail" aria-hidden="true"></span>
+      <span class="mono">Scroll</span>
+    </p>
   </section>
 
-  <!-- ================= WORK ================= -->
+  <!-- ============================ WORK ============================ -->
   <section id="work" class="wrap">
-    <div class="section-head reveal">
+    <div class="section-head" data-reveal>
       <div>
-        <span class="mono num">Selected work / 03</span>
+        <span class="mono">Selected work / 04</span>
         <h2 class="h-display">The takes.</h2>
       </div>
-      <p>Every project below shipped as a full build — not a mockup. Sound off, scroll on.</p>
+      <p>Every project below is a full build, not a mockup. Three are live; one is in review. Sound off, scroll on.</p>
     </div>
   </section>
 
-  <div id="scenes">
-    <!-- Scene 1 : F1 Motors -->
-    <section class="scene">
-      <div class="wrap scene-inner">
-        <div class="scene-media reveal" style="background-image:url('assets/posters/f1-motors.jpg')">
-          <video muted loop playsinline preload="metadata" data-video="videos/f1-motors.mp4"></video>
-        </div>
-        <div class="scene-text reveal">
-          <div class="mono scene-tag">01 — Client work</div>
-          <h3>F1 Motors</h3>
-          <p>A 6-page site for a pre-owned luxury car dealer in Vadodara — scroll-scrubbed cinematic video through the collection, a live EMI calculator, and a stock admin panel so the team updates inventory themselves.</p>
+  <div class="scenes">
+
+    <!-- 01 -->
+    <article class="scene" data-scene="F1 Motors">
+      <div class="wrap scene__inner">
+        <a class="scene__frame frame-link" href="work/f1-motors.html" tabindex="-1" aria-hidden="true">
+          <div class="frame" data-reveal="frame">
+            <div class="frame__slate"><span class="id">F1 Motors</span></div>
+            <img class="frame__media" src="assets/posters/f1-motors.jpg" alt="" loading="lazy" decoding="async" width="1280" height="720">
+            <video class="frame__media" data-src="videos/f1-motors.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+          </div>
+        </a>
+
+        <div class="scene__text" data-reveal>
+          <p class="mono scene__tag">01 — Client work</p>
+          <h3 class="scene__title h-display">F1 Motors</h3>
+          <p class="scene__body">
+            A six-page site for a pre-owned luxury car dealer in Vadodara — scroll-scrubbed
+            cinematic video through the collection, a live EMI calculator, and a stock admin
+            panel so the team updates inventory themselves.
+          </p>
           <div class="chips">
             <span class="chip">Scroll-scrub video</span>
             <span class="chip">EMI calculator</span>
             <span class="chip">Admin panel</span>
           </div>
-          <a href="#contact" class="scene-link">Start something like this →</a>
+          <a href="work/f1-motors.html" class="text-link">Read the case study <span aria-hidden="true">→</span></a>
         </div>
       </div>
-    </section>
+    </article>
 
-    <!-- Scene 2 : Five Star Food -->
-    <section class="scene">
-      <div class="wrap scene-inner">
-        <div class="scene-media reveal" style="background-image:url('assets/posters/five-star.jpg')">
-          <video muted loop playsinline preload="metadata" data-video="videos/five-star.mp4"></video>
-        </div>
-        <div class="scene-text reveal">
-          <div class="mono scene-tag">02 — Client work</div>
-          <h3>Five Star Food Export</h3>
-          <p>A 35-year export business, rebuilt from the ground up: their real 12-step dehydration process visualised as a scroll sequence, a full product catalogue, and every fact pulled from their actual records — not filler copy.</p>
+    <!-- 02 -->
+    <article class="scene" data-scene="Five Star">
+      <div class="wrap scene__inner">
+        <a class="scene__frame frame-link" href="work/five-star.html" tabindex="-1" aria-hidden="true">
+          <div class="frame" data-reveal="frame">
+            <div class="frame__slate"><span class="id">Five Star Food Export</span></div>
+            <img class="frame__media" src="assets/posters/five-star.jpg" alt="" loading="lazy" decoding="async" width="1280" height="720">
+            <video class="frame__media" data-src="videos/five-star-dark.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+          </div>
+        </a>
+
+        <div class="scene__text" data-reveal>
+          <p class="mono scene__tag">02 — Client work</p>
+          <h3 class="scene__title h-display">Five Star Food Export</h3>
+          <p class="scene__body">
+            A 35-year export business rebuilt from the ground up: their real twelve-step
+            dehydration process visualised as a scroll sequence, a full product catalogue,
+            and every fact pulled from their own records rather than filler copy.
+          </p>
           <div class="chips">
             <span class="chip">Process visualisation</span>
             <span class="chip">Multi-page</span>
             <span class="chip">Live</span>
           </div>
-          <a href="#contact" class="scene-link">Start something like this →</a>
+          <a href="work/five-star.html" class="text-link">Read the case study <span aria-hidden="true">→</span></a>
         </div>
       </div>
-    </section>
+    </article>
 
-    <!-- Scene 3 : NEXUS -->
-    <section class="scene">
-      <div class="wrap scene-inner">
-        <div class="scene-media reveal" style="background-image:url('assets/posters/nexus.jpg')">
-          <video muted loop playsinline preload="metadata" data-video="videos/nexus.mp4"></video>
+    <!-- 03 -->
+    <article class="scene" data-scene="Katariya">
+      <div class="wrap scene__inner">
+        <a class="scene__frame frame-link" href="work/katariya.html" tabindex="-1" aria-hidden="true">
+          <div class="frame" data-reveal="frame">
+            <div class="frame__slate"><span class="id">Katariya</span></div>
+            <img class="frame__media" src="assets/posters/katariya.jpg" alt="" loading="lazy" decoding="async" width="1280" height="720">
+            <video class="frame__media" data-src="videos/katariya.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+          </div>
+        </a>
+
+        <div class="scene__text" data-reveal>
+          <p class="mono scene__tag">03 — Client work</p>
+          <h3 class="scene__title h-display">Katariya</h3>
+          <p class="scene__body">
+            A family menswear showroom in Mahuva with nothing sold online. The page opens
+            with “scroll to step inside” and means it — the whole site is a walk down the
+            racks, ending at directions and a phone number rather than a cart.
+          </p>
+          <div class="chips">
+            <span class="chip">Walk-through scroll</span>
+            <span class="chip">Local retail</span>
+            <span class="chip">In build</span>
+          </div>
+          <a href="work/katariya.html" class="text-link">Read the case study <span aria-hidden="true">→</span></a>
         </div>
-        <div class="scene-text reveal">
-          <div class="mono scene-tag">03 — Own product</div>
-          <h3>NEXUS</h3>
-          <p>An AI-assisted trading platform, built and run in-house: authentication, live market data, and a paper-trading engine for learning strategy without risking real capital. Proof we build full products, not just marketing pages.</p>
+      </div>
+    </article>
+
+    <!-- 04 -->
+    <article class="scene" data-scene="NEXUS">
+      <div class="wrap scene__inner">
+        <a class="scene__frame frame-link" href="work/nexus.html" tabindex="-1" aria-hidden="true">
+          <div class="frame" data-reveal="frame">
+            <div class="frame__slate"><span class="id">NEXUS</span></div>
+            <img class="frame__media" src="assets/posters/nexus.jpg" alt="" loading="lazy" decoding="async" width="1280" height="720">
+            <video class="frame__media" data-src="videos/nexus.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+          </div>
+        </a>
+
+        <div class="scene__text" data-reveal>
+          <p class="mono scene__tag">04 — Own product</p>
+          <h3 class="scene__title h-display">NEXUS</h3>
+          <p class="scene__body">
+            An AI-assisted trading platform, built and run in-house: authentication, live
+            market data, and a paper-trading engine for learning strategy without risking
+            real capital. Proof the studio builds full products, not just marketing pages.
+          </p>
           <div class="chips">
             <span class="chip">Full-stack app</span>
             <span class="chip">Live data</span>
             <span class="chip">Auth &amp; payments</span>
           </div>
-          <a href="#contact" class="scene-link">Start something like this →</a>
+          <a href="work/nexus.html" class="text-link">Read the case study <span aria-hidden="true">→</span></a>
         </div>
       </div>
-    </section>
+    </article>
+
   </div>
 
-  <!-- ================= APPROACH ================= -->
-  <section id="approach" class="wrap approach">
-    <div class="approach-grid">
-      <div class="reveal">
+  <!-- ========================== APPROACH ========================== -->
+  <section id="approach" class="wrap approach" data-scene="Approach">
+    <div class="approach__grid">
+      <div data-reveal>
         <p class="mono" style="margin-bottom:20px">The approach</p>
-        <p class="approach-lead">A long take is one unbroken shot — the camera keeps running, nothing cuts. <span class="accent">That's the site, too.</span></p>
-        <div class="stat-row">
-          <div class="stat"><b>3</b><span>industries served</span></div>
-          <div class="stat"><b>1</b><span>founder, every project</span></div>
-          <div class="stat"><b>∞</b><span>revisions until it's right*</span></div>
-          <div class="stat"><b>IN → 🌍</b><span>built in India, shipped worldwide</span></div>
-        </div>
+        <p class="approach__lead">
+          A long take is one unbroken shot — the camera keeps running, nothing cuts.
+          <span class="accent">That's the site, too.</span>
+        </p>
+
+        <dl class="stats" data-reveal-group>
+          <div class="stat" data-reveal><b>3</b><span>industries shipped in</span></div>
+          <div class="stat" data-reveal><b>1</b><span>founder on every project, start to finish</span></div>
+          <div class="stat" data-reveal><b>35</b><span>years of client history rebuilt</span></div>
+          <div class="stat" data-reveal><b>0</b><span>templates used</span></div>
+        </dl>
       </div>
-      <div class="approach-body reveal">
-        <p>Longtake is a small, senior studio — you work directly with the person building your site, not an account manager passing your brief down a chain.</p>
-        <p>Most sites are built as a stack of static sections. We build them as <strong>one continuous sequence</strong>: scroll becomes the camera move, and every section is a scene in the same shot rather than a new page loading in.</p>
-        <p>That takes longer to build than a template. It's also the entire reason to hire a studio instead of dragging blocks around a website builder.</p>
-        <p style="font-size:12px;opacity:.6">*within the agreed scope of the project — see terms on request.</p>
+
+      <div class="approach__body" data-reveal>
+        <p>
+          Longtake is a small, senior studio. You work directly with the person building
+          your site — not an account manager passing your brief down a chain.
+        </p>
+        <p>
+          Most sites are built as a stack of static sections. We build them as
+          <strong>one continuous sequence</strong>: scroll becomes the camera move, and each
+          section is a scene in the same shot rather than a new page loading in.
+        </p>
+        <p>
+          That takes longer to build than a template. It is also the entire reason to hire a
+          studio instead of dragging blocks around a website builder.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- ================= SERVICES ================= -->
-  <section id="services" class="wrap services">
-    <div class="section-head reveal">
+  <!-- ========================== SERVICES ========================== -->
+  <section id="services" class="wrap services" data-scene="Services">
+    <div class="section-head" data-reveal>
       <div>
-        <span class="mono num">What we build</span>
+        <span class="mono">What we build</span>
         <h2 class="h-display">On the slate.</h2>
       </div>
       <p>Websites are the core of it. These are the reasons clients come back.</p>
     </div>
-    <div class="svc-list reveal">
-      <div class="svc"><span class="idx mono">01</span><h4>Cinematic websites</h4><p>Scroll-driven, motion-first builds — the studio's core craft.</p></div>
-      <div class="svc"><span class="idx mono">02</span><h4>Brand identity</h4><p>Logo, colour, type — a system, not a one-off mark.</p></div>
-      <div class="svc"><span class="idx mono">03</span><h4>Product &amp; ad video</h4><p>AI-assisted footage, edited into launch films and reels.</p></div>
-      <div class="svc"><span class="idx mono">04</span><h4>Photo &amp; image design</h4><p>Product shoots, social creative, print-ready design.</p></div>
-      <div class="svc"><span class="idx mono">05</span><h4>Care &amp; maintenance</h4><p>Hosting, updates and small changes after launch, on retainer.</p></div>
+
+    <div class="svc-list" data-reveal-group>
+      <div class="svc" data-reveal>
+        <span class="idx mono">01</span>
+        <h3>Cinematic websites</h3>
+        <p>Scroll-driven, motion-first builds — the studio's core craft.</p>
+      </div>
+      <div class="svc" data-reveal>
+        <span class="idx mono">02</span>
+        <h3>Brand identity</h3>
+        <p>Logo, colour, type — a system, not a one-off mark.</p>
+      </div>
+      <div class="svc" data-reveal>
+        <span class="idx mono">03</span>
+        <h3>Product &amp; ad video</h3>
+        <p>AI-assisted footage, edited into launch films and reels.</p>
+      </div>
+      <div class="svc" data-reveal>
+        <span class="idx mono">04</span>
+        <h3>Photo &amp; image design</h3>
+        <p>Product shoots, social creative, print-ready design.</p>
+      </div>
+      <div class="svc" data-reveal>
+        <span class="idx mono">05</span>
+        <h3>Care &amp; maintenance</h3>
+        <p>Hosting, updates and small changes after launch, on retainer.</p>
+      </div>
     </div>
   </section>
 
-  <!-- ================= CONTACT ================= -->
-  <section id="contact" class="wrap contact reveal">
+  <!-- =========================== CONTACT =========================== -->
+  <section id="contact" class="wrap contact" data-scene="Contact" data-reveal>
     <p class="mono">Cut to you</p>
-    <h2 class="h-display">Tell us what you're<br>building<span class="accent">.</span></h2>
-    <div class="contact-actions">
-      <a href="mailto:prince@longtakestudio.com" class="btn primary">prince@longtakestudio.com</a>
-      <a href="https://wa.me/917041092923" target="_blank" rel="noopener" class="btn ghost">WhatsApp</a>
+    <h2 class="h-display">Tell us what you're building<span class="accent">.</span></h2>
+
+    <div class="contact__actions">
+      <a href="mailto:prince@longtakestudio.com" class="btn btn--primary">prince@longtakestudio.com</a>
+      <a href="https://wa.me/917041092923" class="btn btn--ghost" target="_blank" rel="noopener">WhatsApp</a>
     </div>
-    <div class="contact-meta">
-      <a href="https://instagram.com/longtakestudio" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://x.com/longtakestudio" target="_blank" rel="noopener">X</a>
-      <a href="https://youtube.com/@longtakestudio" target="_blank" rel="noopener">YouTube</a>
+
+    <div class="contact__meta">
+      <a href="https://instagram.com/longtake.studio" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://youtube.com/@LongtakeStudioo" target="_blank" rel="noopener">YouTube</a>
       <span>Mahuva, Gujarat — working worldwide</span>
     </div>
   </section>
 
 </main>
 
-<footer>
-  <span class="mono">© 2026 LONGTAKE STUDIO</span>
-  <span class="mono">WEBSITES THAT MOVE LIKE FILM</span>
+<footer class="site-footer">
+  <span class="mono">© 2026 Longtake Studio</span>
+  <span class="mono">Websites that move like film</span>
 </footer>
 
-<script>
-// ---------- hero load sequence ----------
-window.addEventListener('DOMContentLoaded', () => {
-  const tl = [
-    ['#eyebrow', 0],
-    ['#heroTitle .line:nth-child(1) span', 160],
-    ['#heroTitle .line:nth-child(2) span', 280],
-    ['#heroSub', 520],
-    ['#heroCta', 640],
-    ['#scrollCue', 820],
-  ];
-  tl.forEach(([sel, delay]) => {
-    document.querySelectorAll(sel).forEach(el => {
-      setTimeout(() => {
-        el.style.transition = 'opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1)';
-        el.style.opacity = 1;
-        el.style.transform = 'translateY(0)';
-      }, delay);
-    });
-  });
-});
-
-// ---------- scroll reveal ----------
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-}, { threshold: 0.16 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-// scene media + text special-case (they use inline opacity, not the .reveal class)
-const sceneEls = document.querySelectorAll('.scene-media, .scene-text');
-const io2 = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.transition = 'opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1)';
-      e.target.style.opacity = 1;
-      e.target.style.transform = 'translateY(0) scale(1)';
-    }
-  });
-}, { threshold: 0.2 });
-sceneEls.forEach(el => io2.observe(el));
-
-// ---------- lazy video: only attach + play once a real file exists ----------
-document.querySelectorAll('video[data-video]').forEach(v => {
-  const src = v.getAttribute('data-video');
-  const source = document.createElement('source');
-  source.src = src;
-  source.type = 'video/mp4';
-  v.appendChild(source);
-  v.addEventListener('loadeddata', () => { v.classList.add('ready'); v.play().catch(()=>{}); });
-  v.load();
-});
-
-// ---------- the running timecode (the signature: the take is still running) ----------
-const start = Date.now();
-const tcEl = document.getElementById('timecode');
-function pad(n){ return n.toString().padStart(2,'0'); }
-setInterval(() => {
-  const s = Math.floor((Date.now() - start) / 1000);
-  const h = pad(Math.floor(s/3600)), m = pad(Math.floor((s%3600)/60)), sec = pad(s%60);
-  if (tcEl) tcEl.textContent = `REC ${h}:${m}:${sec}`;
-}, 1000);
-</script>
-
+<script src="assets/js/longtake.js" defer></script>
 </body>
 </html>
