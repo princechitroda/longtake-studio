@@ -111,45 +111,45 @@ d.classList.remove('is-loading');d.classList.add('is-revealed');}},6000);}());
 
 <main id="main">
 
-  <!-- ============================ HERO ============================ -->
-  <section class="hero">
-    <div class="hero__bg" aria-hidden="true">
-      <div class="hero__plate is-on" style="background-image:url(assets/stills/f1-1.jpg)"></div>
-      <div class="hero__plate" style="background-image:url(assets/stills/fs-1.jpg)"></div>
-      <div class="hero__plate" style="background-image:url(assets/stills/kt-1.jpg)"></div>
-      <div class="hero__plate" style="background-image:url(assets/stills/nx-1.jpg)"></div>
+  <!-- ========================== THE APERTURE ========================== -->
+  <section class="aperture" data-aperture="1500" aria-label="Longtake Studio">
+    <div class="aperture__sticky">
+    <div class="aperture__stage">
+      <div class="aperture__media">
+        <img src="assets/posters/hero-longtake.jpg" alt="Longtake Studio title card" width="1280" height="720" decoding="async">
+        <video data-src="videos/hero-longtake.mp4" muted loop playsinline preload="none" aria-hidden="true"></video>
+      </div>
+      <div class="aperture__marks" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     </div>
+    <p class="aperture__cue mono"><span>Scroll</span></p>
+    </div>
+  </section>
 
-    <div class="hero__inner">
+  <!-- ========================= THE STATEMENT ========================= -->
+  <section class="wrap" aria-label="What the studio does">
+    <ul class="layered" data-layered>
+        <li class="layered__row"><p> </p><p>WEBSITES</p></li>
+        <li class="layered__row"><p>WEBSITES</p><p>THAT</p></li>
+        <li class="layered__row"><p>THAT</p><p>MOVE</p></li>
+        <li class="layered__row"><p>MOVE</p><p>LIKE</p></li>
+        <li class="layered__row"><p>LIKE</p><p>FILM</p></li>
+        <li class="layered__row"><p>FILM</p><p> </p></li>
+    </ul>
+
+    <div class="hero__inner" style="padding-inline:0">
       <p class="hero__eyebrow">
         <span class="bar" aria-hidden="true"></span>
         <span class="mono">Web &amp; motion studio — India to worldwide</span>
       </p>
-
-      <h1 class="hero__title h-display" data-hero-title>
-        <span class="hero__line">Websites that</span><span class="hero__line">move like <em class="accent" style="font-style:normal">film</em>.</span>
-      </h1>
-
       <p class="hero__sub lede">
         Cinematic, scroll-driven builds for brands that refuse to look like everyone else.
         One continuous take — not a page of disconnected blocks.
       </p>
-
       <div class="hero__cta">
         <a href="#work" class="btn btn--primary">See the work <span class="btn__arrow" aria-hidden="true">→</span></a>
         <a href="#contact" class="btn btn--ghost">Start a project</a>
       </div>
     </div>
-
-    <div class="hero__meta">
-      <span class="mono">Four builds, three live</span>
-      <span class="mono">Mahuva, Gujarat</span>
-    </div>
-
-    <p class="scroll-cue">
-      <span class="rail" aria-hidden="true"></span>
-      <span class="mono">Scroll</span>
-    </p>
   </section>
 
   <!-- ============================ THE REEL ============================ -->
@@ -329,9 +329,9 @@ d.classList.remove('is-loading');d.classList.add('is-revealed');}},6000);}());
 
 <script src="assets/js/leader.js" defer></script>
 <script src="assets/js/projector.js" defer></script>
-<script src="assets/js/hero.js" defer></script>
 <script src="assets/js/longtake.js" defer></script>
 <script src="assets/js/motion.js" defer></script>
+<script src="assets/js/aperture.js" defer></script>
 <script src="assets/js/reel.js" defer></script>
 </body>
 </html>
