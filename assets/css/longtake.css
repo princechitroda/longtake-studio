@@ -1083,3 +1083,131 @@ html:not(.has-reel) .slide__frame::after { background: rgba(10,9,8,.12); }
   .hero__title .ch { transform: none !important; filter: none !important; opacity: 1 !important; }
   .is-loaded .hero__inner::after { animation: none; }
 }
+
+/* ==========================================================================
+   HERO v3 — the aperture.
+
+   A port of the smooth-scroll-hero pattern to vanilla: a sticky full-screen
+   layer whose clip-path window opens from a small rectangle to the full frame
+   as you scroll, while the media inside scales 170% -> 100%.
+
+   The original is React + framer-motion; this site has no build step, so the
+   two animated values are mapped from scroll directly. Same two values, same
+   curve, none of the dependencies.
+
+   The media is the studio's own title card, so the window opening on it reads
+   as an aperture rather than a stock parallax trick.
+   ========================================================================== */
+.aperture { position: relative; width: 100%; }
+
+.aperture__sticky { position: sticky; top: 0; height: 100svh; width: 100%; }
+
+.aperture__stage {
+  position: absolute; inset: 0;
+  background: var(--ink-deep);
+  overflow: hidden;
+  /* Set by JS; this is the closed state so the first paint is already right. */
+  clip-path: polygon(25% 25%, 75% 25%, 75% 75%, 25% 75%);
+  will-change: clip-path;
+}
+
+.aperture__media { position: absolute; inset: 0; overflow: hidden; }
+.aperture__media img,
+.aperture__media video {
+  position: absolute; top: 50%; left: 50%;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  /* 1.35 rather than the reference's 1.7: this media is a wordmark, and at
+     1.7 the closed aperture crops it mid-letter, which reads as a bug. */
+  transform: translate(-50%, -50%) scale(1.35);
+  transform-origin: center;
+  will-change: transform;
+}
+.aperture__media video { opacity: 0; transition: opacity .7s var(--ease); }
+.aperture__media video.is-ready { opacity: 1; }
+
+/* Framing marks on the aperture itself — the same corner language as the
+   leader and the project stages. */
+.aperture__marks { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.aperture__marks i {
+  position: absolute; width: 26px; height: 26px;
+  border: 1px solid rgba(239,236,228,.45);
+}
+.aperture__marks i:nth-child(1) { top: 22px;    left: 22px;  border-right: 0; border-bottom: 0; }
+.aperture__marks i:nth-child(2) { top: 22px;    right: 22px; border-left: 0;  border-bottom: 0; }
+.aperture__marks i:nth-child(3) { bottom: 22px; left: 22px;  border-right: 0; border-top: 0; }
+.aperture__marks i:nth-child(4) { bottom: 22px; right: 22px; border-left: 0;  border-top: 0; }
+
+/* Outside the stage: inside it, the clip hides the cue exactly when it is
+   the only instruction on screen. */
+.aperture__cue {
+  position: absolute; left: 50%; bottom: clamp(24px, 5vh, 54px);
+  transform: translateX(-50%); z-index: 3;
+  display: flex; align-items: center; gap: 10px;
+  transition: opacity .5s var(--ease);
+}
+
+/* No JS, or reduced motion: the aperture is simply open. */
+.no-js .aperture__stage,
+html:not(.has-aperture) .aperture__stage { clip-path: none; }
+.no-js .aperture__sticky,
+html:not(.has-aperture) .aperture__sticky { position: relative; }
+.no-js .aperture__media img, .no-js .aperture__media video,
+html:not(.has-aperture) .aperture__media img,
+html:not(.has-aperture) .aperture__media video { transform: translate(-50%, -50%) scale(1); }
+.no-js .aperture, html:not(.has-aperture) .aperture { height: auto !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .aperture__stage { clip-path: none !important; }
+  .aperture__media img, .aperture__media video { transform: translate(-50%,-50%) scale(1) !important; }
+}
+
+/* ==========================================================================
+   LAYERED TEXT — an isometric stack where each row slides to reveal the next.
+
+   Ported from the GSAP original. The stagger is a CSS transition-delay per
+   row rather than a timeline, which needs no library and cannot desync.
+   ========================================================================== */
+.layered {
+  --row-h: clamp(34px, 5.4vw, 60px);
+  --row-step: 35px;
+  display: flex; flex-direction: column; align-items: center;
+  padding: var(--s-7) 0;
+  font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(30px, 6.2vw, 72px);
+  letter-spacing: -.02em; text-transform: uppercase;
+  color: var(--bone);
+  cursor: pointer; list-style: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.layered__row {
+  height: var(--row-h);
+  overflow: hidden;
+  position: relative;
+}
+/* Alternating shears are what make the stack read as an isometric solid. */
+.layered__row:nth-child(odd)  { transform: translateX(var(--x)) skew(60deg, -30deg) scaleY(.66667); }
+.layered__row:nth-child(even) { transform: translateX(var(--x)) skew(0deg, -30deg)  scaleY(1.33333); }
+
+.layered__row p {
+  height: var(--row-h);
+  line-height: calc(var(--row-h) - 5px);
+  padding-inline: 15px;
+  margin: 0; white-space: nowrap;
+  transform: translateY(0);
+  transition: transform .8s var(--ease);
+  transition-delay: calc(var(--i) * 80ms);
+}
+.layered:hover .layered__row p,
+.layered:focus-within .layered__row p { transform: translateY(calc(var(--row-h) * -1)); }
+
+.layered__row p:first-child { color: var(--grey); }
+.layered__row p:last-child  { color: var(--bone); }
+
+@media (max-width: 760px) { .layered { --row-step: 20px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .layered__row p { transition: none; }
+  .layered:hover .layered__row p { transform: none; }
+}
