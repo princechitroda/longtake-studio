@@ -15,6 +15,10 @@
   'use strict';
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  // Touch/coarse pointers get the static hero: the scroll-driven clip window is
+  // a landscape frame squeezed into a portrait slice on a phone, and 1500px of
+  // scroll to open it is a chore. CSS lays out the static case as a full 16:9.
+  var fine   = window.matchMedia('(hover: hover) and (pointer: fine)');
 
   /* ------------------------------------------------------------- aperture */
 
@@ -30,9 +34,10 @@
     var SCROLL_LEN = parseInt(ap.dataset.aperture, 10) || 1500;
     var FROM = 25, TO = 75;
 
-    if (reduce.matches) {
-      // Open, static, and no extra section height to scroll through.
-      ap.style.height = '100svh';
+    if (reduce.matches || !fine.matches) {
+      // Open, static, no extra scroll height. CSS (has-aperture absent) frames
+      // it as a full 16:9 band so the wordmark is never cropped.
+      ap.style.height = '';
       if (video) attach();
       return;
     }
