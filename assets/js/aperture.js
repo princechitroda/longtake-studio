@@ -15,6 +15,10 @@
   'use strict';
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  // Touch/coarse pointers get the static hero: the scroll-driven clip window is
+  // a landscape frame squeezed into a portrait slice on a phone, and 1500px of
+  // scroll to open it is a chore. CSS lays out the static case as a full 16:9.
+  var fine   = window.matchMedia('(hover: hover) and (pointer: fine)');
 
   /* ------------------------------------------------------------- aperture */
 
@@ -30,23 +34,42 @@
     var SCROLL_LEN = parseInt(ap.dataset.aperture, 10) || 1500;
     var FROM = 25, TO = 75;
 
-    if (reduce.matches) {
-      // Open, static, and no extra section height to scroll through.
-      ap.style.height = '100svh';
-      if (video) attach();
+    if (reduce.matches || !fine.matches) {
+      // Open, static, no extra scroll height. CSS (has-aperture absent) frames
+      // it as a full 16:9 band so the wordmark is never cropped.
+      ap.style.height = '';
+      // Someone asking for reduced motion is asking not to be shown a moving
+      // picture; the poster is a real frame and says the same thing.
+      if (video && reduce.matches) video.remove();
+      else if (video) attach();
       return;
     }
 
     document.documentElement.classList.add('has-aperture');
     ap.style.height = 'calc(' + SCROLL_LEN + 'px + 100svh)';
 
+    // A 1280 frame behind a 390px band is wasted bytes; phones get the light cut.
+    function pickSrc() {
+      var sm = video.dataset.srcSm;
+      return (sm && window.matchMedia('(max-width: 860px)').matches) ? sm : video.dataset.src;
+    }
+
+    // The clip is a reveal — a blank slate becoming a finished site — so it must
+    // start when the viewer can actually see it, not behind the leader.
+    function whenRevealed(fn) {
+      if (document.documentElement.classList.contains('is-revealed')) fn();
+      else document.addEventListener('leader:done', fn, { once: true });
+    }
+
     function attach() {
       if (!video || video.dataset.attached) return;
       video.dataset.attached = '1';
       video.addEventListener('loadeddata', function () { video.classList.add('is-ready'); });
       video.addEventListener('error', function () { video.remove(); });
-      video.src = video.dataset.src;      // .src runs resource selection
-      video.play().catch(function () { /* blocked; the poster stands */ });
+      video.src = pickSrc();              // .src runs resource selection
+      whenRevealed(function () {
+        video.play().catch(function () { /* blocked; the poster stands */ });
+      });
     }
 
     var raf = 0;
@@ -87,8 +110,17 @@
     if ('IntersectionObserver' in window && video) {
       new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
-          if (e.isIntersecting) { attach(); if (video.paused) video.play().catch(function () {}); }
-          else if (!video.paused) { video.pause(); }
+          if (e.isIntersecting) {
+            attach();
+            whenRevealed(function () {
+              // Coming back to a finished take plays it again; coming back to a
+              // paused one just resumes.
+              if (video.ended) video.currentTime = 0;
+              if (video.paused) video.play().catch(function () {});
+            });
+          } else if (!video.paused) {
+            video.pause();
+          }
         });
       }, { threshold: 0.05 }).observe(ap);
     } else {

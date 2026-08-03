@@ -319,7 +319,10 @@ main, .site-footer { position: relative; z-index: 1; }
 
 @media (max-width: 860px) {
   .timecode { display: none; }
-  .nav-toggle { display: block; }
+  .nav-toggle { display: block; z-index: 120; }
+  /* A dark halo keeps the bars legible even when they sit over the light
+     wordmark frame at the top of the page. */
+  .nav-toggle__bar { box-shadow: 0 0 6px rgba(10,9,8,.7); }
   .site-nav {
     position: fixed; inset: var(--header-h) 0 auto 0;
     flex-direction: column; align-items: flex-start; gap: 0;
@@ -332,6 +335,12 @@ main, .site-footer { position: relative; z-index: 1; }
   }
   .site-nav[data-open='true'] { clip-path: inset(0 0 0 0); }
   .site-nav a { font-size: 15px; letter-spacing: .1em; padding-block: 16px; width: 100%; }
+  /* With the menu open, make the whole bar solid so the close (×) always reads,
+     whatever is behind it. */
+  .site-header:has(.site-nav[data-open='true']) {
+    background: rgba(10,9,8,.98);
+    backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -559,7 +568,7 @@ a.frame-link:focus-visible .frame {
 /* --------------------------------------------------------------------------
    11. APPROACH
    -------------------------------------------------------------------------- */
-.approach { padding: var(--s-4) 0 var(--s-7); border-top: 1px solid var(--line); }
+.approach { padding-block: var(--s-4) var(--s-7); border-top: 1px solid var(--line); }
 .approach__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 80px); align-items: start; }
 .approach__lead {
   font-family: var(--font-display); font-weight: 600;
@@ -610,9 +619,13 @@ a.frame-link:focus-visible .frame {
 /* --------------------------------------------------------------------------
    13. CONTACT + FOOTER
    -------------------------------------------------------------------------- */
-.contact { padding: var(--s-7) 0 var(--s-6); border-top: 1px solid var(--line); text-align: center; }
+.contact { padding-block: var(--s-7) var(--s-6); border-top: 1px solid var(--line); text-align: center; }
 .contact h2 { font-size: clamp(36px, 7.2vw, 92px); max-width: 15ch; margin: 12px auto var(--s-4); }
 .contact__actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: var(--s-6); }
+.contact__note {
+  max-width: 56ch; margin: calc(var(--s-4) * -1 + 4px) auto var(--s-6);
+  color: var(--grey-dim); font-size: 13.5px; line-height: 1.75;
+}
 .contact__meta {
   display: flex; justify-content: center; gap: var(--s-2) var(--s-4);
   flex-wrap: wrap; color: var(--grey); font-size: 13.5px;
@@ -627,6 +640,21 @@ a.frame-link:focus-visible .frame {
   flex-wrap: wrap; gap: 12px;
 }
 .site-footer .mono { font-size: 10px; }
+
+/* 404 — a frame that never made the cut */
+.lost {
+  min-height: 74svh;
+  padding-block: calc(var(--header-h) + var(--s-6)) var(--s-6);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.lost__code { color: var(--grey-dim); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; }
+.lost__title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(40px, 8vw, 104px); line-height: 1.03; letter-spacing: -.03em;
+  margin: var(--s-3) 0 var(--s-3);
+}
+.lost__text { color: var(--grey); line-height: 1.8; font-size: 15.5px; max-width: 52ch; }
+.lost__actions { margin-top: var(--s-4); display: flex; gap: 14px; flex-wrap: wrap; }
 
 /* --------------------------------------------------------------------------
    14. CASE STUDY PAGES
@@ -645,7 +673,7 @@ a.frame-link:focus-visible .frame {
 .case-facts dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--grey-dim); margin-bottom: 7px; }
 .case-facts dd { font-size: 14.5px; color: var(--bone); line-height: 1.5; }
 
-.case-body { padding: var(--s-5) 0 var(--s-6); }
+.case-body { padding-block: var(--s-5) var(--s-6); }
 .case-block { border-top: 1px solid var(--line); padding: var(--s-4) 0; display: grid; grid-template-columns: 200px 1fr; gap: var(--s-4); }
 .case-block > h2 { font-family: var(--font-mono); font-weight: 500; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--bone); padding-top: 5px; }
 .case-block__text p { color: var(--grey); line-height: 1.8; font-size: 15.5px; margin-bottom: var(--s-2); max-width: 62ch; }
@@ -653,10 +681,13 @@ a.frame-link:focus-visible .frame {
 .case-block__text strong { color: var(--bone); font-weight: 600; }
 
 .case-list { list-style: none; display: grid; gap: var(--s-2); max-width: 62ch; }
-.case-list li { display: grid; grid-template-columns: 26px 1fr; gap: 12px; color: var(--grey); line-height: 1.7; font-size: 15px; }
+/* The number sits in the margin; the body flows as one normal block. A grid
+   here would auto-place the loose text after <strong> into the number column,
+   which is what folded each item into a one-word-per-line strip. */
+.case-list li { position: relative; padding-left: 38px; color: var(--grey); line-height: 1.7; font-size: 15px; }
 .case-list li::before {
-  content: attr(data-n); font-family: var(--font-mono); font-size: 11px;
-  color: var(--grey); padding-top: 4px;
+  content: attr(data-n); position: absolute; left: 0; top: 4px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--grey);
 }
 .case-list strong { color: var(--bone); font-weight: 600; }
 
@@ -668,7 +699,7 @@ a.frame-link:focus-visible .frame {
 }
 
 /* Next-take footer — the reel keeps running */
-.next-take { border-top: 1px solid var(--line); padding: var(--s-5) 0 var(--s-6); }
+.next-take { border-top: 1px solid var(--line); padding-block: var(--s-5) var(--s-6); }
 .next-take a { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; }
 .next-take h2 { font-size: clamp(30px, 5.2vw, 60px); transition: color var(--dur-mid) var(--ease); }
 .next-take a:hover h2, .next-take a:focus-visible h2 { color: var(--tally); }
@@ -1003,7 +1034,7 @@ html:not(.has-reel) .slide__frame::after { background: rgba(10,9,8,.12); }
   .stage__card, .stage__spec { transform: none !important; }
 }
 
-.case-intro { padding: var(--s-5) 0 var(--s-2); }
+.case-intro { padding-block: var(--s-5) var(--s-2); }
 .case-intro .lede { max-width: 62ch; }
 .stage__back { display: inline-flex; align-items: center; gap: 9px; margin-bottom: var(--s-3); }
 
@@ -1160,6 +1191,27 @@ html:not(.has-aperture) .aperture__media video { transform: translate(-50%, -50%
 @media (prefers-reduced-motion: reduce) {
   .aperture__stage { clip-path: none !important; }
   .aperture__media img, .aperture__media video { transform: translate(-50%,-50%) scale(1) !important; }
+}
+
+/* Phones and other touch/coarse pointers: no scroll hijack, no clip window.
+   The stage becomes a full-width 16:9 band showing the whole wordmark frame,
+   so nothing is cropped and the hero is one tidy screen-width card. */
+@media (hover: none), (pointer: coarse) {
+  .aperture { height: auto !important; }
+  .aperture__sticky { position: relative; height: auto; }
+  .aperture__stage {
+    position: relative; inset: auto;
+    aspect-ratio: 16 / 9; width: 100%;
+    clip-path: none !important;
+  }
+  .aperture__media img,
+  .aperture__media video { transform: translate(-50%, -50%) scale(1) !important; }
+  /* The band ends mid-screen with copy already visible beneath it, so the cue
+     has nothing to explain — and it sat on the bright frame at poor contrast. */
+  .aperture__cue { display: none; }
+  /* The footage carries its own framing marks, and at this size the CSS pair
+     lands right on top of them — one set of corners, not two. */
+  .aperture__marks { display: none; }
 }
 
 /* ==========================================================================
