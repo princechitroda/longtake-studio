@@ -56,13 +56,19 @@
   /* ----------------------------------------------------------- scroll → X */
 
   var travel = 0;      // how far the track must move, in px
-  var railW  = 0;
+  var geom = [];       // cached slide geometry: layout is read here and nowhere else
 
   function measure() {
     // Section height = one viewport to pin against, plus the track's overflow.
     travel = Math.max(0, track.scrollWidth - window.innerWidth);
     reel.style.height = (window.innerHeight + travel) + 'px';
-    railW = travel;
+
+    // Cache offsetLeft/Width once. Reading getBoundingClientRect for every
+    // slide on every scroll frame forced a layout each time — that, plus five
+    // 1280px video decodes, was the stutter.
+    geom = slides.map(function (s) {
+      return { mid: s.offsetLeft + s.offsetWidth / 2, w: s.offsetWidth };
+    });
     layout();
   }
 
@@ -84,11 +90,29 @@
     // Depth: each slide turns toward the middle of the screen and sits back a
     // little, so the row reads as one space rather than a strip of cards.
     var mid = window.innerWidth / 2;
-    slides.forEach(function (slide) {
-      var r  = slide.getBoundingClientRect();
-      var c  = r.left + r.width / 2;
+    var vw  = window.innerWidth;
+    slides.forEach(function (slide, i) {
+      var g = geom[i]; if (!g) return;
+      var c  = x + g.mid;                           // screen centre, no layout read
       var d  = (c - mid) / mid;                     // -1 .. 1 across the screen
       var dd = Math.max(-1.4, Math.min(1.4, d));
+
+      // Everything within a viewport of the middle keeps playing; the rest is
+      // paused so the browser never decodes what nobody can see.
+      var v = slide.querySelector('video[data-src]');
+      if (v) {
+        if (Math.abs(c - mid) < vw * 0.9) {
+          if (!v.dataset.attached) {
+            v.dataset.attached = '1';
+            v.addEventListener('loadeddata', function () { v.classList.add('is-ready'); });
+            v.addEventListener('error', function () { v.remove(); });
+            v.src = v.dataset.src;
+          }
+          if (v.paused) v.play().catch(function () {});
+        } else if (!v.paused) {
+          v.pause();
+        }
+      }
       var isHot = slide === hot;
 
       var rotY = isHot ? 0 : -dd * 7.5;
@@ -124,30 +148,18 @@
   /* -------------------------------------------------------------- hover 3D */
 
   slides.forEach(function (slide) {
-    var video = slide.querySelector('video[data-src]');
 
     slide.addEventListener('pointerenter', function () {
       hot = slide;
       slide.classList.add('is-hot');
       slide.style.transition = 'transform .55s var(--ease)';
       layout();
-
-      if (!video) return;
-      if (!video.dataset.attached) {
-        video.dataset.attached = '1';
-        video.addEventListener('loadeddata', function () { video.classList.add('is-ready'); });
-        video.addEventListener('error', function () { video.remove(); });
-        video.src = video.dataset.src;   // .src runs resource selection; a late <source> would not
-      }
-      video.play().catch(function () { /* autoplay refused; the still stands */ });
     });
 
     slide.addEventListener('pointerleave', function () {
       if (hot === slide) hot = null;
       slide.classList.remove('is-hot');
-      layout();
-      // Stop decoding once it is no longer the thing being looked at.
-      if (video && !video.paused) video.pause();
+      layout();   // playback is driven by position now, not by hover
     });
 
     // Keyboard parity: focusing the link should do what hovering does.
