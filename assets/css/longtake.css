@@ -1036,6 +1036,16 @@ html:not(.has-reel) .slide__frame::after { background: rgba(10,9,8,.12); }
 
 .case-intro { padding-block: var(--s-5) var(--s-2); }
 .case-intro .lede { max-width: 62ch; }
+
+/* Concept work, labelled as such. Stated plainly and up front, because a
+   prospect who finds out later stops believing the rest of the page. */
+.case-note {
+  max-width: 62ch; margin-top: var(--s-3);
+  border-left: 2px solid var(--tally);
+  padding: 2px 0 2px var(--s-2);
+  color: var(--grey); font-size: 14px; line-height: 1.7;
+}
+.case-note strong { color: var(--bone); font-weight: 600; }
 .stage__back { display: inline-flex; align-items: center; gap: 9px; margin-bottom: var(--s-3); }
 
 /* ==========================================================================
