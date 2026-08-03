@@ -34,7 +34,10 @@ jobs:
       - name: Assemble site
         run: |
           mkdir -p _site
-          cp index.html _site/
+          cp index.html 404.html robots.txt sitemap.xml site.webmanifest _site/
+          # CNAME is what binds the custom domain; without it Pages reverts to
+          # the github.io host on every deploy.
+          cp CNAME _site/
           cp -r assets work videos _site/
           echo "Publishing:" && du -sh _site && find _site -maxdepth 1
 

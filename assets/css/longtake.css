@@ -622,6 +622,10 @@ a.frame-link:focus-visible .frame {
 .contact { padding-block: var(--s-7) var(--s-6); border-top: 1px solid var(--line); text-align: center; }
 .contact h2 { font-size: clamp(36px, 7.2vw, 92px); max-width: 15ch; margin: 12px auto var(--s-4); }
 .contact__actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: var(--s-6); }
+.contact__note {
+  max-width: 56ch; margin: calc(var(--s-4) * -1 + 4px) auto var(--s-6);
+  color: var(--grey-dim); font-size: 13.5px; line-height: 1.75;
+}
 .contact__meta {
   display: flex; justify-content: center; gap: var(--s-2) var(--s-4);
   flex-wrap: wrap; color: var(--grey); font-size: 13.5px;
@@ -636,6 +640,21 @@ a.frame-link:focus-visible .frame {
   flex-wrap: wrap; gap: 12px;
 }
 .site-footer .mono { font-size: 10px; }
+
+/* 404 — a frame that never made the cut */
+.lost {
+  min-height: 74svh;
+  padding-block: calc(var(--header-h) + var(--s-6)) var(--s-6);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.lost__code { color: var(--grey-dim); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; }
+.lost__title {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(40px, 8vw, 104px); line-height: 1.03; letter-spacing: -.03em;
+  margin: var(--s-3) 0 var(--s-3);
+}
+.lost__text { color: var(--grey); line-height: 1.8; font-size: 15.5px; max-width: 52ch; }
+.lost__actions { margin-top: var(--s-4); display: flex; gap: 14px; flex-wrap: wrap; }
 
 /* --------------------------------------------------------------------------
    14. CASE STUDY PAGES
@@ -1187,13 +1206,12 @@ html:not(.has-aperture) .aperture__media video { transform: translate(-50%, -50%
   }
   .aperture__media img,
   .aperture__media video { transform: translate(-50%, -50%) scale(1) !important; }
-  .aperture__marks i { width: 20px; height: 20px; }
-  .aperture__marks i:nth-child(1),
-  .aperture__marks i:nth-child(2) { top: 14px; }
-  .aperture__marks i:nth-child(3),
-  .aperture__marks i:nth-child(4) { bottom: 14px; }
-  .aperture__marks i:nth-child(1), .aperture__marks i:nth-child(3) { left: 14px; }
-  .aperture__marks i:nth-child(2), .aperture__marks i:nth-child(4) { right: 14px; }
+  /* The band ends mid-screen with copy already visible beneath it, so the cue
+     has nothing to explain — and it sat on the bright frame at poor contrast. */
+  .aperture__cue { display: none; }
+  /* The footage carries its own framing marks, and at this size the CSS pair
+     lands right on top of them — one set of corners, not two. */
+  .aperture__marks { display: none; }
 }
 
 /* ==========================================================================
