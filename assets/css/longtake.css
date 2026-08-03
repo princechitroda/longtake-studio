@@ -366,7 +366,7 @@ main, .site-footer { position: relative; z-index: 1; }
   content: ''; position: absolute; inset: 0;
   background:
     /* vertical: keeps the header readable and sinks the footer edge */
-    linear-gradient(180deg, rgba(18,17,16,.72) 0%, rgba(18,17,16,.58) 44%, rgba(18,17,16,.90) 100%),
+    linear-gradient(180deg, rgba(18,17,16,.66) 0%, rgba(18,17,16,.50) 44%, rgba(18,17,16,.88) 100%),
     /* horizontal: heavy over the column the copy occupies, near-clear on the
        right so the footage is actually visible rather than uniformly muddy */
     linear-gradient(90deg, rgba(18,17,16,.66) 0%, rgba(18,17,16,.52) 34%, rgba(18,17,16,.04) 72%);
@@ -790,14 +790,16 @@ a.frame-link:focus-visible .frame {
 
 .reel__track {
   display: flex; align-items: center;
-  gap: clamp(28px, 4.4vw, 76px);
-  padding-inline: max(var(--gutter), calc(50vw - 30vw));
+  gap: clamp(20px, 2.6vw, 44px);
+  /* Half a viewport minus half a slide, so slide one starts centred and the
+     neighbours are already in frame — the reference shows three at a time. */
+  padding-inline: calc(50vw - min(26vw, 260px));
   will-change: transform;
 }
 
 .slide {
   flex: 0 0 auto;
-  width: clamp(300px, 58vw, 860px);
+  width: clamp(240px, 34vw, 520px);
 }
 
 .slide__link { display: block; position: relative; }
@@ -810,7 +812,7 @@ a.frame-link:focus-visible .frame {
   box-shadow: 0 50px 90px -40px rgba(0,0,0,.9);
   /* A real reflection of whatever is rendering, video included, for free on
      the compositor. Firefox ignores it and simply shows no reflection. */
-  -webkit-box-reflect: below 8px linear-gradient(transparent 74%, rgba(0,0,0,.26));
+  -webkit-box-reflect: below 10px linear-gradient(transparent 66%, rgba(0,0,0,.34));
   transition: border-color var(--dur-mid) var(--ease);
 }
 
@@ -852,7 +854,7 @@ a.frame-link:focus-visible .frame {
 
 .slide__title {
   font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(21px, 2.5vw, 38px); letter-spacing: -.035em; line-height: 1;
+  font-size: clamp(17px, 1.55vw, 25px); letter-spacing: -.035em; line-height: 1;
   text-shadow: 0 2px 22px rgba(10,9,8,.85);
 }
 /* Per-letter lift on hover — the caption animates with the slide, not after it */
@@ -1004,3 +1006,80 @@ html:not(.has-reel) .slide__frame::after { background: rgba(10,9,8,.12); }
 .case-intro { padding: var(--s-5) 0 var(--s-2); }
 .case-intro .lede { max-width: 62ch; }
 .stage__back { display: inline-flex; align-items: center; gap: 9px; margin-bottom: var(--s-3); }
+
+/* ==========================================================================
+   HERO v2 — the first shot.
+
+   The old hero was one blurred loop behind large type: legible, but it said
+   nothing. This one opens on the studio's actual work — a slow montage of the
+   builds, drifting — and the headline assembles rather than fading in.
+   Stills, not video: four simultaneous decodes behind a headline is exactly
+   the cost this page cannot afford, and a still holds a slow drift better.
+   ========================================================================== */
+.hero__plate {
+  position: absolute; inset: -6%;
+  background-size: cover; background-position: center;
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 2.4s var(--ease-soft);
+  will-change: opacity, transform;
+}
+.hero__plate.is-on {
+  opacity: 1;
+  /* The drift only runs on the plate that is showing, so there is never more
+     than one animated layer at a time. */
+  animation: hero-drift 16s linear forwards;
+}
+@keyframes hero-drift {
+  from { transform: scale(1.04) translate3d(0, 0, 0); }
+  to   { transform: scale(1.13) translate3d(-1.4%, -1.2%, 0); }
+}
+
+/* Headline: per-character, masked, arriving out of soft focus. */
+.hero__title .ch {
+  display: inline-block;
+  /* Inline-blocks sit on the baseline and carry their own ~1.2em box, which
+     inflated every line to roughly double height. Pin both so the mask is
+     exactly one line tall. */
+  line-height: .93;
+  vertical-align: top;
+  transform: translateY(102%) rotate(2.2deg);
+  filter: blur(9px);
+  opacity: 0;
+  transition:
+    transform 1.15s var(--ease),
+    filter    .95s var(--ease),
+    opacity   .75s var(--ease);
+  transition-delay: calc(var(--i) * 26ms);
+}
+/* The line masks are block-level, so the whitespace between them in the markup
+   forms an anonymous line box that inherits the title's line-height and shows
+   up as a phantom gap between the two lines. Zero it on the parent and set the
+   real leading on the masks themselves. */
+.hero__title { line-height: 0; }
+.hero__line { display: block; overflow: hidden; line-height: .95; padding-bottom: .12em; }
+.is-loaded .hero__title .ch { transform: none; filter: blur(0); opacity: 1; }
+
+/* The eyebrow rule draws itself */
+.hero__eyebrow .bar { transform-origin: left; }
+
+/* A single light sweep across the headline as it settles — one gesture, not
+   a decoration that repeats. */
+.hero__inner::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 42%, rgba(239,236,228,.09) 50%, transparent 58%);
+  transform: translateX(-120%);
+  opacity: 0;
+}
+.is-loaded .hero__inner::after { animation: hero-sweep 1.9s var(--ease-soft) .55s 1; }
+@keyframes hero-sweep {
+  0%   { transform: translateX(-120%); opacity: 0; }
+  35%  { opacity: 1; }
+  100% { transform: translateX(120%);  opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__plate.is-on { animation: none; transform: scale(1.02); }
+  .hero__title .ch { transform: none !important; filter: none !important; opacity: 1 !important; }
+  .is-loaded .hero__inner::after { animation: none; }
+}
