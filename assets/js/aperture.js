@@ -130,6 +130,38 @@
     draw();
   }());
 
+  /* ----------------------------------------------------- founder parallax */
+
+  // The portrait drifts inside its clipped frame as the section crosses the
+  // viewport. Decorative layer only — the copy beside it never moves, because
+  // parallaxed body text is genuinely unpleasant to read.
+  var fFrame = document.querySelector('.founder__frame');
+  if (fFrame && !reduce.matches) (function () {
+    var img = fFrame.querySelector('img');
+    if (!img) return;
+
+    var RANGE = 22;              // px; the image is scaled 1.07 so this never shows an edge
+    var raf = 0;
+
+    function draw() {
+      raf = 0;
+      var r = fFrame.getBoundingClientRect();
+      var vh = window.innerHeight;
+      if (r.bottom < -80 || r.top > vh + 80) return;   // offscreen: nothing to do
+
+      // -1 above the fold .. +1 below it, 0 when centred
+      var p = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
+      p = Math.max(-1, Math.min(1, p));
+      img.style.setProperty('--py', (-p * RANGE).toFixed(1) + 'px');
+    }
+
+    function onScroll() { if (!raf) raf = requestAnimationFrame(draw); }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    draw();
+  }());
+
   /* --------------------------------------------------------- layered text */
 
   // Each row steps sideways from the centre so the stack shears into an
